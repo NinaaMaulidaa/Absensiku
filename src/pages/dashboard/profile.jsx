@@ -139,7 +139,7 @@ export function Profile() {
               </ul>
             </div>
           </div>
-          <div className="px-4 pb-4">
+          {/* <div className="px-4 pb-4">
             <Typography variant="h6" color="blue-gray" className="mb-2">
               Projects
             </Typography>
@@ -211,11 +211,13 @@ export function Profile() {
                 )
               )}
             </div>
-          </div>
+          </div> */}
         </CardBody>
       </Card>
     </>
   );
+
+  
 }
 
 export default Profile;

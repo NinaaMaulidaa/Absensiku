@@ -16,22 +16,22 @@ export function Tables() {
     <div className="mt-12 mb-8 flex flex-col gap-12">
       <Card>
         <CardHeader variant="gradient" color="gray" className="mb-8 p-6">
-          <Typography variant="h6" color="white">
-            Authors Table
+          <Typography variant="h5" color="white">
+           Daftar Hadir
           </Typography>
         </CardHeader>
         <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
           <table className="w-full min-w-[640px] table-auto">
             <thead>
               <tr>
-                {["author", "function", "status", "employed", ""].map((el) => (
+                {["Nama", "Sekolah", "Status", "Jam Masuk", "Jam Keluar", ].map((el) => (
                   <th
                     key={el}
                     className="border-b border-blue-gray-50 py-3 px-5 text-left"
                   >
                     <Typography
                       variant="small"
-                      className="text-[11px] font-bold uppercase text-blue-gray-400"
+                      className="text-[13px] font-bold uppercase text-blue-gray-400"
                     >
                       {el}
                     </Typography>
@@ -41,7 +41,7 @@ export function Tables() {
             </thead>
             <tbody>
               {authorsTableData.map(
-                ({ img, name, email, job, online, date }, key) => {
+                ({ img, name, email, sekolah, status, checkin, checkout }, key) => {
                   const className = `py-3 px-5 ${
                     key === authorsTableData.length - 1
                       ? ""
@@ -69,26 +69,28 @@ export function Tables() {
                       </td>
                       <td className={className}>
                         <Typography className="text-xs font-semibold text-blue-gray-600">
-                          {job[0]}
-                        </Typography>
-                        <Typography className="text-xs font-normal text-blue-gray-500">
-                          {job[1]}
+                          {sekolah[0]}
                         </Typography>
                       </td>
                       <td className={className}>
                         <Chip
                           variant="gradient"
-                          color={online ? "green" : "blue-gray"}
-                          value={online ? "online" : "offline"}
-                          className="py-0.5 px-2 text-[11px] font-medium w-fit"
+                          color={status ? "green" : "blue-gray"}
+                          value={status ? "Masuk" : "Tidak Masuk"}
+                          className="py-0.5 px-2 text-[10px] font-medium w-fit"
                         />
                       </td>
                       <td className={className}>
                         <Typography className="text-xs font-semibold text-blue-gray-600">
-                          {date}
+                          {checkin}
                         </Typography>
                       </td>
                       <td className={className}>
+                        <Typography className="text-xs font-semibold text-blue-gray-600">
+                          {checkout}
+                        </Typography>
+                      </td>
+                      {/* <td className={className}>
                         <Typography
                           as="a"
                           href="#"
@@ -96,7 +98,7 @@ export function Tables() {
                         >
                           Edit
                         </Typography>
-                      </td>
+                      </td> */}
                     </tr>
                   );
                 }
@@ -105,7 +107,7 @@ export function Tables() {
           </table>
         </CardBody>
       </Card>
-      <Card>
+      {/* <Card>
         <CardHeader variant="gradient" color="gray" className="mb-8 p-6">
           <Typography variant="h6" color="white">
             Projects Table
@@ -213,7 +215,7 @@ export function Tables() {
             </tbody>
           </table>
         </CardBody>
-      </Card>
+      </Card> */}
     </div>
   );
 }
