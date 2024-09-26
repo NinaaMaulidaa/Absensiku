@@ -7,7 +7,7 @@ import {
   ServerStackIcon,
   RectangleStackIcon,
 } from "@heroicons/react/24/solid";
-import { Home, Profile, Tables, Notifications } from "@/pages/dashboard";
+import { Home, Anggota, Kehadiran, Laporan, Notifikasi } from "@/pages/dashboard";
 import { SignIn, SignUp } from "@/pages/auth";
 
 const icon = {
@@ -26,27 +26,27 @@ export const routes = [
       },
       {
         icon: <UserCircleIcon {...icon} />,
-        name: "siswa",
-        path: "/profile",
-        element: <Profile />,
+        name: "anggota",
+        path: "/anggota",
+        element: <Anggota />,
       },
       {
         icon: <TableCellsIcon {...icon} />,
         name: "kehadiran",
-        path: "/tables",
-        element: <Tables />,
+        path: "/kehadiran",
+        element: <Kehadiran />,
       },
       {
         icon: <ClipboardDocumentListIcon {...icon} />,
         name: "laporan",
-        path: "/",
-        element: <Tables />,
+        path: "/laporan",
+        element: <Laporan />,
       },
       {
         icon: <InformationCircleIcon {...icon} />,
-        name: "notifications",
-        path: "/notifications",
-        element: <Notifications />,
+        name: "notifikasi",
+        path: "/notifikasi",
+        element: <Notifikasi />,
       },
     ],
   },
