@@ -24,7 +24,7 @@ export function Tables() {
           <table className="w-full min-w-[640px] table-auto">
             <thead>
               <tr>
-                {["Nama", "Sekolah", "Status", "Jam Masuk", "Jam Keluar", ].map((el) => (
+                {["Nama", "Sekolah", "Jam Masuk", "Jam Keluar", "Status",].map((el) => (
                   <th
                     key={el}
                     className="border-b border-blue-gray-50 py-3 px-5 text-left"
@@ -41,7 +41,7 @@ export function Tables() {
             </thead>
             <tbody>
               {authorsTableData.map(
-                ({ img, name, email, sekolah, status, checkin, checkout }, key) => {
+                ({ img, name, email, sekolah, checkin, checkout, status }, key) => {
                   const className = `py-3 px-5 ${
                     key === authorsTableData.length - 1
                       ? ""
@@ -73,14 +73,6 @@ export function Tables() {
                         </Typography>
                       </td>
                       <td className={className}>
-                        <Chip
-                          variant="gradient"
-                          color={status ? "green" : "blue-gray"}
-                          value={status ? "Masuk" : "Tidak Masuk"}
-                          className="py-0.5 px-2 text-[10px] font-medium w-fit"
-                        />
-                      </td>
-                      <td className={className}>
                         <Typography className="text-xs font-semibold text-blue-gray-600">
                           {checkin}
                         </Typography>
@@ -89,6 +81,14 @@ export function Tables() {
                         <Typography className="text-xs font-semibold text-blue-gray-600">
                           {checkout}
                         </Typography>
+                      </td>
+                      <td className={className}>
+                        <Chip
+                          variant="gradient"
+                          color={status ? "green" : "blue-gray"}
+                          value={status ? "Masuk" : "Tidak Masuk"}
+                          className="py-0.5 px-2 text-[10px] font-medium w-fit"
+                        />
                       </td>
                       {/* <td className={className}>
                         <Typography
