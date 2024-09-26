@@ -25,7 +25,7 @@ export function Anggota() {
           <table className="w-full min-w-[640px] table-auto">
             <thead>
               <tr>
-                {["Nama", "Sekolah", "Status", "Jam Masuk", "Jam Keluar", ].map((el) => (
+                {["Nama", "Sekolah", "Opsi", ].map((el) => (
                   <th
                     key={el}
                     className="border-b border-blue-gray-50 py-3 px-5 text-left"
@@ -42,7 +42,7 @@ export function Anggota() {
             </thead>
             <tbody>
               {authorsTableData.map(
-                ({ img, name, email, sekolah, status, checkin, checkout }, key) => {
+                ({ img, name, email, sekolah, checkin, checkout }, key) => {
                   const className = `py-3 px-5 ${
                     key === authorsTableData.length - 1
                       ? ""
@@ -73,15 +73,23 @@ export function Anggota() {
                           {sekolah[0]}
                         </Typography>
                       </td>
-                      <td className='py-3 px-5 border-b border-blue-gray-50 flex justify-center'>
-                        <Chip
-                          variant="gradient"
-                          color={status ? "green" : "blue-gray"}
-                          value={status ? "Masuk" : "Tidak Masuk"}
-                          className="py-0.5 px-2 text-[10px] font-medium w-fit"
-                        />
-                      </td>
                       <td className={className}>
+                        <Typography
+                          as="a"
+                          href="#"
+                          className="text-xs font-semibold text-blue-gray-600"
+                        >
+                          Edit
+                        </Typography>
+                        <Typography
+                          as="a"
+                          href="#"
+                          className="text-xs font-semibold text-blue-gray-600"
+                        >
+                          Hapus
+                        </Typography>
+                      </td>
+                      {/* <td className={className}>
                         <Typography className="text-xs text-center font-semibold text-blue-gray-600">
                           {checkin}
                         </Typography>
@@ -90,7 +98,7 @@ export function Anggota() {
                         <Typography className="text-xs text-center font-semibold text-blue-gray-600">
                           {checkout}
                         </Typography>
-                      </td>
+                      </td> */}
                     </tr>
                   );
                 }
