@@ -4,12 +4,9 @@ import {
   CardBody,
   Typography,
   Avatar,
-  Chip,
-  Tooltip,
-  Progress,
 } from "@material-tailwind/react";
-import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
-import { authorsTableData, projectsTableData } from "@/data";
+import {TrashIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
+import { authorsTableData } from "@/data";
 
 export function Anggota() {
   return (
@@ -25,14 +22,14 @@ export function Anggota() {
           <table className="w-full min-w-[640px] table-auto">
             <thead>
               <tr>
-                {["Nama", "Sekolah", "Opsi", ].map((el) => (
+                {["Nama", "Sekolah", "Periode","Opsi", ].map((el) => (
                   <th
                     key={el}
                     className="border-b border-blue-gray-50 py-3 px-5 text-left"
                   >
                     <Typography
                       variant="small"
-                      className={`text-[13px] font-bold ${el == "Jam Masuk" || el == "Jam Keluar" || el == "Status" ? `text-center` : ''} uppercase text-blue-gray-400`}
+                      className={`text-[13px] font-bold ${el == "Periode" || el == "Opsi" ? `text-center` : ''} uppercase text-blue-gray-400`}
                     >
                       {el}
                     </Typography>
@@ -42,7 +39,7 @@ export function Anggota() {
             </thead>
             <tbody>
               {authorsTableData.map(
-                ({ img, name, email, sekolah, checkin, checkout }, key) => {
+                ({ img, name, email, sekolah, periode, opsi }, key) => {
                   const className = `py-3 px-5 ${
                     key === authorsTableData.length - 1
                       ? ""
@@ -70,35 +67,32 @@ export function Anggota() {
                       </td>
                       <td className={className}>
                         <Typography className="text-xs font-semibold text-blue-gray-600">
-                          {sekolah[0]}
+                          {sekolah}
                         </Typography>
                       </td>
                       <td className={className}>
+                        <Typography className="text-xs font-semibold text-blue-gray-600 text-center">
+                          {periode}
+                        </Typography>
+                      </td>
+                      <td className={className}>
+                        <div className="flex gap-3 justify-center items-center">
                         <Typography
                           as="a"
                           href="#"
                           className="text-xs font-semibold text-blue-gray-600"
                         >
-                          Edit
+                         <PencilSquareIcon className="w-5 h-5" />
                         </Typography>
                         <Typography
                           as="a"
                           href="#"
                           className="text-xs font-semibold text-blue-gray-600"
                         >
-                          Hapus
+                        <TrashIcon className="w-5 h-5" />
                         </Typography>
+                        </div>
                       </td>
-                      {/* <td className={className}>
-                        <Typography className="text-xs text-center font-semibold text-blue-gray-600">
-                          {checkin}
-                        </Typography>
-                      </td>
-                      <td className={className}>
-                        <Typography className="text-xs text-center font-semibold text-blue-gray-600">
-                          {checkout}
-                        </Typography>
-                      </td> */}
                     </tr>
                   );
                 }

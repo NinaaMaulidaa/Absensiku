@@ -1,14 +1,11 @@
 import {
-  HomeIcon,
   UserCircleIcon,
   TableCellsIcon,
   ClipboardDocumentListIcon,
-  InformationCircleIcon,
-  ServerStackIcon,
-  RectangleStackIcon,
+  ArrowLeftIcon,
 } from "@heroicons/react/24/solid";
-import { Home, Anggota, Kehadiran, Laporan, Notifikasi } from "@/pages/dashboard";
-import { SignIn, SignUp } from "@/pages/auth";
+import { Anggota, Kehadiran, Laporan   } from "@/pages/dashboard";
+import { SignIn, ChangePw } from "@/pages/auth";
 
 const icon = {
   className: "w-5 h-5 text-inherit",
@@ -18,12 +15,6 @@ export const routes = [
   {
     layout: "dashboard",
     pages: [
-      {
-        icon: <HomeIcon {...icon} />,
-        name: "dashboard",
-        path: "/home",
-        element: <Home />,
-      },
       {
         icon: <UserCircleIcon {...icon} />,
         name: "anggota",
@@ -42,12 +33,6 @@ export const routes = [
         path: "/laporan",
         element: <Laporan />,
       },
-      {
-        icon: <InformationCircleIcon {...icon} />,
-        name: "notifikasi",
-        path: "/notifikasi",
-        element: <Notifikasi />,
-      },
     ],
   },
   {
@@ -55,16 +40,14 @@ export const routes = [
     layout: "auth",
     pages: [
       {
-        icon: <ServerStackIcon {...icon} />,
-        name: "sign in",
+        icon: <ArrowLeftIcon {...icon} />,
+        name: "Log Out",
         path: "/sign-in",
         element: <SignIn />,
       },
       {
-        icon: <RectangleStackIcon {...icon} />,
-        name: "sign up",
-        path: "/sign-up",
-        element: <SignUp />,
+        path: "/change-pw",
+        element: <ChangePw />,
       },
     ],
   },
