@@ -3,8 +3,10 @@ import {
   TableCellsIcon,
   ClipboardDocumentListIcon,
   ArrowLeftIcon,
+  FingerPrintIcon,
+  ClipboardDocumentIcon,
 } from "@heroicons/react/24/solid";
-import { Anggota, Kehadiran, Laporan   } from "@/pages/dashboard";
+import { Anggota, Kehadiran, Laporan, Absen, RekapAbsen } from "@/pages/dashboard";
 import { SignIn, ChangePw } from "@/pages/auth";
 
 const icon = {
@@ -17,7 +19,7 @@ export const routes = [
     pages: [
       {
         icon: <UserCircleIcon {...icon} />,
-        name: "anggota",
+        name: "daftar anggota",
         path: "/anggota",
         element: <Anggota />,
       },
@@ -32,6 +34,18 @@ export const routes = [
         name: "laporan",
         path: "/laporan",
         element: <Laporan />,
+      },
+      {
+        icon: <FingerPrintIcon {...icon} />,
+        name: "absensi",
+        path: "/absen",
+        element: <Absen />,
+      },
+      {
+        icon: <ClipboardDocumentIcon {...icon} />,
+        name: "rekap absen",
+        path: "/rekap",
+        element: <RekapAbsen />,
       },
     ],
   },

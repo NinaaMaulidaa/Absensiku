@@ -1,28 +1,14 @@
 import {
-  BanknotesIcon,
-  UserPlusIcon,
-  UsersIcon,
-  ChartBarIcon,
+  QrCodeIcon,
 } from "@heroicons/react/24/solid";
+import { element } from "prop-types";
 
 export const statisticsCardsData = [
-  // {
-  //   color: "gray",
-  //   icon: BanknotesIcon,
-  //   title: "Today's Money",
-  //   value: "$53k",
-  //   footer: {
-  //     color: "text-green-500",
-  //     value: "+55%",
-  //     label: "than last week",
-  //   },
-  // },
-  
   {
     color: "gray",
-    icon: UserPlusIcon,
-    title: "Daftar Anggota",
-    value: "30",
+    icon: QrCodeIcon,
+    title: "Check-In",
+    value: "Semangatt!!",
     footer: {
       color: "text-green-500",
       value: "+3%",
@@ -31,26 +17,15 @@ export const statisticsCardsData = [
   },
   {
     color: "gray",
-    icon: UsersIcon,
-    title: "Kehadiran",
-    value: "20",
+    icon: QrCodeIcon,
+    title: "Check-Out",
+    value: "Hati-hati dijalan.",
     footer: {
       color: "text-red-500",
       value: "-2%",
       label: "than yesterday",
     },
   },
-  // {
-  //   color: "gray",
-  //   icon: ChartBarIcon,
-  //   title: "Sales",
-  //   value: "$103,430",
-  //   footer: {
-  //     color: "text-green-500",
-  //     value: "+5%",
-  //     label: "than yesterday",
-  //   },
-  // },
 ];
 
 export default statisticsCardsData;

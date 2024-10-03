@@ -20,18 +20,18 @@ export function StatisticsCard({ color, icon, title, value, footer }) {
         {icon}
       </CardHeader>
       <CardBody className="p-4 text-right">
-        <Typography variant="small" className="font-normal text-blue-gray-600">
+        <Typography variant="h-6" className="font-normal text-blue-gray-700">
           {title}
         </Typography>
-        <Typography variant="h4" color="blue-gray">
+        <Typography variant="small" color="blue-gray">
           {value}
         </Typography>
       </CardBody>
-      {footer && (
+      {/* {footer && (
         <CardFooter className="border-t border-blue-gray-50 p-4">
           {footer}
         </CardFooter>
-      )}
+      )} */}
     </Card>
   );
 }
