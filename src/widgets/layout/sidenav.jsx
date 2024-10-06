@@ -49,8 +49,10 @@ export function Sidenav({ brandImg, brandName, routes }) {
         </IconButton>
       </div>
       <div className="m-4">
-        {routes.map(({ layout, title, pages }, key) => (
-          <ul key={key} className="mb-4 flex flex-col gap-1">
+        {routes.map(({ layout, title, pages }, key) => {
+          const pageList = typeof pages == 'function' ? pages("Magang") : pages()
+          return (
+            <ul key={key} className="mb-4 flex flex-col gap-1">
             {title && (
               <li className="mx-3.5 mt-4 mb-2">
                 <Typography
@@ -62,7 +64,7 @@ export function Sidenav({ brandImg, brandName, routes }) {
                 </Typography>
               </li>
             )}
-            {pages.map(({ icon, name, path }) => (
+            {pageList.map(({ icon, name, path }) => (
               <li key={name}>
                 <NavLink to={`/${layout}${path}`}>
                   {({ isActive }) => (
@@ -91,7 +93,8 @@ export function Sidenav({ brandImg, brandName, routes }) {
               </li>
             ))}
           </ul>
-        ))}
+          )
+})}
       </div>
     </aside>
   );

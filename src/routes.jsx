@@ -16,54 +16,113 @@ const icon = {
 export const routes = [
   {
     layout: "dashboard",
-    pages: [
-      {
-        icon: <UserCircleIcon {...icon} />,
-        name: "daftar anggota",
-        path: "/anggota",
-        element: <Anggota />,
-      },
-      {
-        icon: <TableCellsIcon {...icon} />,
-        name: "kehadiran",
-        path: "/kehadiran",
-        element: <Kehadiran />,
-      },
-      {
-        icon: <ClipboardDocumentListIcon {...icon} />,
-        name: "laporan",
-        path: "/laporan",
-        element: <Laporan />,
-      },
-      {
-        icon: <FingerPrintIcon {...icon} />,
-        name: "absensi",
-        path: "/absen",
-        element: <Absen />,
-      },
-      {
-        icon: <ClipboardDocumentIcon {...icon} />,
-        name: "rekap absen",
-        path: "/rekap",
-        element: <RekapAbsen />,
-      },
-    ],
+    pages: (user) => {
+      if(user === 'Magang') {
+        const pages = [
+          {
+            icon: <UserCircleIcon {...icon} />,
+            name: "Profle",
+            path: "/profile",
+            element: <Anggota />,
+          },
+          {
+            icon: <FingerPrintIcon {...icon} />,
+            name: "absensi",
+            path: "/absen",
+            element: <Absen />,
+          },
+          {
+            icon: <ClipboardDocumentIcon {...icon} />,
+            name: "rekap absen",
+            path: "/rekap",
+            element: <RekapAbsen />,
+          },
+        ]
+        return pages
+      } 
+      if(user === "All") {
+        return [
+          {
+            icon: <UserCircleIcon {...icon} />,
+            name: "Profle",
+            path: "/profile",
+            element: <Anggota />,
+          },
+          {
+            icon: <FingerPrintIcon {...icon} />,
+            name: "absensi",
+            path: "/absen",
+            element: <Absen />,
+          },
+          {
+            icon: <ClipboardDocumentIcon {...icon} />,
+            name: "rekap absen",
+            path: "/rekap",
+            element: <RekapAbsen />,
+          },
+          {
+            icon: <UserCircleIcon {...icon} />,
+            name: "daftar anggota",
+            path: "/anggota",
+            element: <Anggota />,
+          },
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "kehadiran",
+            path: "/kehadiran",
+            element: <Kehadiran />,
+          },
+          {
+            icon: <ClipboardDocumentListIcon {...icon} />,
+            name: "laporan",
+            path: "/laporan",
+            element: <Laporan />,
+          },
+        ]
+      } else {
+        const pages = [
+          {
+            icon: <UserCircleIcon {...icon} />,
+            name: "daftar anggota",
+            path: "/anggota",
+            element: <Anggota />,
+          },
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "kehadiran",
+            path: "/kehadiran",
+            element: <Kehadiran />,
+          },
+          {
+            icon: <ClipboardDocumentListIcon {...icon} />,
+            name: "laporan",
+            path: "/laporan",
+            element: <Laporan />,
+          },
+        ]
+        return pages
+      }
+    },
   },
   {
     title: "auth pages",
     layout: "auth",
-    pages: [
-      {
-        icon: <ArrowLeftIcon {...icon} />,
-        name: "Log Out",
-        path: "/sign-in",
-        element: <SignIn />,
-      },
-      {
-        path: "/change-pw",
-        element: <ChangePw />,
-      },
-    ],
+    pages: (user) => {
+      if(user) {
+        return [
+          {
+            icon: <ArrowLeftIcon {...icon} />,
+            name: "Log Out",
+            path: "/sign-in",
+            element: <SignIn />,
+          },
+          {
+            path: "/change-pw",
+            element: <ChangePw />,
+          },
+        ]
+      }
+    },
   },
 ];
 
