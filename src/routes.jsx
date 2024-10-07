@@ -6,7 +6,7 @@ import {
   FingerPrintIcon,
   ClipboardDocumentIcon,
 } from "@heroicons/react/24/solid";
-import { Anggota, Kehadiran, Laporan, Absen, RekapAbsen } from "@/pages/dashboard";
+import { Anggota, Kehadiran, Laporan, Absen, RekapAbsen, Profile } from "@/pages/dashboard";
 import { SignIn, ChangePw } from "@/pages/auth";
 
 const icon = {
@@ -23,7 +23,7 @@ export const routes = [
             icon: <UserCircleIcon {...icon} />,
             name: "Profle",
             path: "/profile",
-            element: <Anggota />,
+            element: <Profile />,
           },
           {
             icon: <FingerPrintIcon {...icon} />,
@@ -46,7 +46,7 @@ export const routes = [
             icon: <UserCircleIcon {...icon} />,
             name: "Profle",
             path: "/profile",
-            element: <Anggota />,
+            element: <Profile />,
           },
           {
             icon: <FingerPrintIcon {...icon} />,

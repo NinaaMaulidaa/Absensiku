@@ -4,3 +4,4 @@ export * from "@/pages/dashboard/kehadiran";
 export * from "@/pages/dashboard/laporan";
 export * from "@/pages/dashboard/absen";
 export * from "@/pages/dashboard/rekap";
+export * from "@/pages/dashboard/profile";
