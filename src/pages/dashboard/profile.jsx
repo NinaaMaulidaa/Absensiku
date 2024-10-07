@@ -47,7 +47,7 @@ import {
                     variant="small"
                     className="font-normal text-blue-gray-600"
                   >
-                    Magang - STMIK Mandira Indonesia
+                    Magang
                   </Typography>
                 </div>
               </div>
@@ -60,14 +60,9 @@ import {
 "
                 details={{
                   "username": "2115354015",
-                  mobile: "082147390668",
+                  telepon: "082147390668",
                   email: "ninakrsn@gmail.com",
-                  location: "Bandung",
-                  social: (
-                    <div className="flex items-center gap-4">
-                      <i className="fa-brands fa-instagram text-purple-500" />
-                    </div>
-                  ),
+                  "sekolah / kampus": "STMIK Mandira Indonesia",
                 }}
                 action={
                   <Tooltip content="Edit Profile">

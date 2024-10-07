@@ -38,7 +38,7 @@ export function Kehadiran() {
             </thead>
             <tbody>
               {authorsTableData.map(
-                ({ img, name, noInduk, sekolah, checkin, checkout, status }, key) => {
+                ({ img, name, email, sekolah, checkin, checkout, status }, key) => {
                   const className = `py-3 px-5 ${
                     key === authorsTableData.length - 1
                       ? ""
@@ -59,7 +59,7 @@ export function Kehadiran() {
                               {name}
                             </Typography>
                             <Typography className="text-xs font-normal text-blue-gray-500">
-                              {noInduk}
+                              {email}
                             </Typography>
                           </div>
                         </div>

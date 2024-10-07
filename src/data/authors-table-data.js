@@ -10,6 +10,7 @@ export const authorsTableData = [
     checkout: "23/04/18",
     status: "Tidak Masuk",
     range: 30,
+    email: 'email@gmail.com'
   },
   {
     img: "/img/1.jpg",
@@ -22,6 +23,7 @@ export const authorsTableData = [
     checkout: "11/01/19",
     status: "Masuk",
     range: 90,
+    email: 'email@gmail.com'
   },
   {
     img: "/img/team-4.jpeg",
@@ -33,6 +35,7 @@ export const authorsTableData = [
     checkout: "19/09/17",
     status: "Terlambat",
     range: 60,
+    email: 'email@gmail.com'
   },
   {
     img: "/img/1.jpg",
@@ -44,6 +47,7 @@ export const authorsTableData = [
     checkout: "-",
     status: "Masuk",
     range: 100,
+    email: 'email@gmail.com'
   },
 ];
 

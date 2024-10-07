@@ -8,7 +8,7 @@ import {
   Footer,
 } from "@/widgets/layout";
 import routes from "@/routes";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Input,
   Option,
@@ -23,14 +23,52 @@ import {
 } from "@material-tailwind/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useMaterialTailwindController, setOpenConfigurator } from "@/context";
+import Swal from 'sweetalert2'
+import fetchData from "@/data/user/fetchListUser";
 
 export function Dashboard() {
   const [controller, dispatch] = useMaterialTailwindController();
-  const { sidenavType } = controller;
-
   const [open, setOpen] = React.useState(false);
- 
+  const { sidenavType } = controller;
+  
   const handleOpen = () => setOpen(!open);
+  
+  const submitForm = async (e) => {
+    e.preventDefault()
+    try {
+      const {nama, username, email, status, password} = e.target
+    const user = {
+      name: nama.value,
+      email: email.value,
+      isActive: true,
+      nomor_induk: username.value,
+      password: password.value
+    }
+    const response = await fetch('https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/user', {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: 'POST',
+      body: JSON.stringify(user)
+    })
+    console.log(await response.json());
+      handleOpen()
+      Swal.fire({
+        title: "Berhasil!",
+        text: "Data pengguna ditambahkan!",
+        icon: "success",
+        timer: 2000
+      });
+    } catch (error) {
+      handleOpen()
+      Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: "Terjadi kesalahan saat menambahkan data!",
+        timer: 2000
+      });
+    }
+  }
 
   return (
     <div className="min-h-screen bg-blue-gray-50/50">
@@ -68,6 +106,7 @@ export function Dashboard() {
           <Footer />
         </div>
       </div>
+      
       <Dialog size="lg" open={open} handler={handleOpen} className="p-4">
         <DialogHeader className="relative m-0 block">
           <Typography variant="h4" color="blue-gray">
@@ -86,7 +125,7 @@ export function Dashboard() {
           </IconButton>
         </DialogHeader>
         <DialogBody className="space-y-4 pb-6">
-          
+        <form action="" onSubmit={(e) => submitForm(e)}>
           <div className="flex gap-4">
             <div className="w-full">
               <Typography
@@ -99,7 +138,7 @@ export function Dashboard() {
               <Input
                 color="gray"
                 size="lg"
-                name="weight"
+                name="nama"
                 className="placeholder:opacity-100 focus:!border-t-gray-900"
                 containerProps={{
                   className: "!min-w-full",
@@ -115,56 +154,12 @@ export function Dashboard() {
                 color="blue-gray"
                 className="mb-2 text-left font-medium"
               >
-                Nomor Induk
+                Email
               </Typography>
               <Input
                 color="gray"
                 size="lg"
-                name="size"
-                className="placeholder:opacity-100 focus:!border-t-gray-900"
-                containerProps={{
-                  className: "!min-w-full",
-                }}
-                labelProps={{
-                  className: "hidden",
-                }}
-              />
-            </div>
-          </div>
-          <div className="flex gap-4">
-            <div className="w-full">
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="mb-2 text-left font-medium"
-              >
-                Asal Sekolah
-              </Typography>
-              <Input
-                color="gray"
-                size="lg"
-                name="weight"
-                className="placeholder:opacity-100 focus:!border-t-gray-900"
-                containerProps={{
-                  className: "!min-w-full",
-                }}
-                labelProps={{
-                  className: "hidden",
-                }}
-              />
-            </div>
-            <div className="w-full">
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="mb-2 text-left font-medium"
-              >
-                Periode
-              </Typography>
-              <Input
-                color="gray"
-                size="lg"
-                name="size"
+                name="email"
                 className="placeholder:opacity-100 focus:!border-t-gray-900"
                 containerProps={{
                   className: "!min-w-full",
@@ -187,7 +182,7 @@ export function Dashboard() {
               <Input
                 color="gray"
                 size="lg"
-                name="weight"
+                name="username"
                 className="placeholder:opacity-100 focus:!border-t-gray-900"
                 containerProps={{
                   className: "!min-w-full",
@@ -208,7 +203,7 @@ export function Dashboard() {
               <Input
                 color="gray"
                 size="lg"
-                name="size"
+                name="password"
                 className="placeholder:opacity-100 focus:!border-t-gray-900"
                 containerProps={{
                   className: "!min-w-full",
@@ -219,12 +214,30 @@ export function Dashboard() {
               />
             </div>
           </div>
-        </DialogBody>
+          <div className="flex gap-4">
+          <div className="w-full">
+            <Typography
+                variant="small"
+                color="blue-gray"
+                className="mb-2 text-left font-medium"
+              >
+                Status
+              </Typography>
+              <Select label="Select Status" name="status">
+                <Option value="true">Active</Option>
+                <Option value="false">Non Active</Option>
+              </Select>
+            </div>
+          </div>
         <DialogFooter>
-          <Button className="ml-auto" onClick={handleOpen}>
+          
+          <Button type="submit" className="ml-auto">
             Simpan
           </Button>
+          
         </DialogFooter>
+      </form>
+        </DialogBody>
       </Dialog>
     </div>
   );

@@ -9,13 +9,14 @@ import {
   DialogBody,
   DialogHeader,
   DialogFooter,
-  IconButton
+  IconButton,
+  Avatar
 } from "@material-tailwind/react";
 import React, { useEffect } from "react";
 import {TrashIcon, PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { authorsTableData } from "@/data";
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import fetchData from "@/data/user/fetchListUser";
 
 export function Anggota() {
 
@@ -24,7 +25,24 @@ export function Anggota() {
   const [isDelete, setDelete] = React.useState(false);
   const handleOpen = () => setOpen(!open);
 
-  const deleteData = () => {
+  const [listUser, setListUser] = React.useState([])
+
+
+  useEffect( () => {
+    const fetchList = async () => {
+      try {
+        const { data } = await fetchData(); // Wait for the data
+        console.log(data);
+        setListUser(data); // Set the resolved data to state
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+  
+    fetchList();
+  }, [])
+
+  const deleteData = (id) => {
     MySwal.fire({
       title: "Apakah anda yakin?",
       text: "Data yang sudah dihapus tidak dapat dikembalikan!",
@@ -35,10 +53,21 @@ export function Anggota() {
       confirmButtonText: "Ya, hapus!"
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: "Dihapus!",
-          text: "Data berhasil di hapus!.",
-          icon: "success"
+        fetch(`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/user/${id}`, {
+          method: 'DELETE',
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }).then((result) => {
+          fetchData()
+          Swal.fire({
+            title: "Dihapus!",
+            text: "Data berhasil di hapus!.",
+            icon: "success",
+            timer: 2000
+          });
+        }).catch((err) => {
+          console.log(err);
         });
       }
     });
@@ -58,14 +87,14 @@ export function Anggota() {
           <table className="w-full min-w-[640px] table-auto">
             <thead>
               <tr>
-                {["Nama", "Nomor Induk", "Sekolah", "Periode","Opsi", ].map((el) => (
+                {["Nama", "Email", "Sekolah", "Periode","Opsi", ].map((el) => (
                   <th
                     key={el}
                     className="border-b border-blue-gray-50 py-3 px-5 text-left"
                   >
                     <Typography
                       variant="small"
-                      className={`text-[13px] font-bold ${el == "Periode" || el == "Nomor Induk" || el == "Sekolah" || el == "Opsi" ? `text-center` : ''} uppercase text-blue-gray-400`}
+                      className={`text-[13px] font-bold ${el == "Periode" || el == "Email" || el == "Sekolah" || el == "Opsi" ? `text-center` : ''} uppercase text-blue-gray-400`}
                     >
                       {el}
                     </Typography>
@@ -74,46 +103,43 @@ export function Anggota() {
               </tr>
             </thead>
             <tbody>
-              {authorsTableData.map(
-                ({ img, name, email, sekolah, noInduk, periode, opsi }, key) => {
+              {listUser.map(
+                (user, key) => {
                   const className = `py-3 px-5 ${
-                    key === authorsTableData.length - 1
+                    key === listUser.length - 1
                       ? ""
                       : "border-b border-blue-gray-50"
                   }`;
 
                   return (
-                    <tr key={name}>
+                    <tr key={key}>
                       <td className={className}>
                         <div className="flex items-center gap-4">
-                          {/* <Avatar src={img} alt={name} size="sm" variant="rounded" /> */}
+                          <Avatar src={user.image} alt={user.image} size="sm" variant="rounded" />
                           <div>
                             <Typography
                               variant="small"
                               color="blue-gray"
                               className="font-semibold"
                             >
-                              {name}
-                            </Typography>
-                            <Typography className="text-xs font-normal text-blue-gray-500">
-                              {email}
+                              {user.name}
                             </Typography>
                           </div>
                         </div>
                       </td>
                       <td className={className}>
                         <Typography className="text-xs font-semibold text-blue-gray-600 text-center">
-                          {noInduk}
+                          {user.email}
                         </Typography>
                       </td>
                       <td className={className}>
                         <Typography className="text-xs font-semibold text-blue-gray-600 text-center">
-                          {sekolah}
+                          {user.institution}
                         </Typography>
                       </td>
                       <td className={className}>
                         <Typography className="text-xs font-semibold text-blue-gray-600 text-center">
-                          {periode}
+                          {user.periode}
                         </Typography>
                       </td>
                       <td className={className}>
@@ -129,7 +155,7 @@ export function Anggota() {
                         <Typography
                           as="a"
                           href="#"
-                          onClick={() => deleteData()}
+                          onClick={() => deleteData(user._id)}
                           className="text-xs font-semibold text-blue-gray-600"
                         >
                         <TrashIcon className="w-5 h-5" />
