@@ -17,14 +17,14 @@ import {TrashIcon, PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outli
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import fetchData from "@/data/user/fetchListUser";
+import { useNavigate } from "react-router-dom";
 
 export function Anggota() {
 
   const MySwal = withReactContent(Swal)
   const [open, setOpen] = React.useState(false);
-  const [isDelete, setDelete] = React.useState(false);
   const handleOpen = () => setOpen(!open);
-
+  const navigate = useNavigate()
   const [listUser, setListUser] = React.useState([])
 
 
@@ -58,8 +58,9 @@ export function Anggota() {
           headers: {
             "Content-Type": "application/json",
           },
-        }).then((result) => {
-          fetchData()
+        }).then(async(result) => {
+          const {data} = await fetchData()
+          setListUser(data)
           Swal.fire({
             title: "Dihapus!",
             text: "Data berhasil di hapus!.",
@@ -67,7 +68,12 @@ export function Anggota() {
             timer: 2000
           });
         }).catch((err) => {
-          console.log(err);
+          Swal.fire({
+            title: "Gagal!",
+            text: "Data gagal di hapus!.",
+            icon: "error",
+            timer: 2000
+          });
         });
       }
     });
@@ -154,7 +160,6 @@ export function Anggota() {
                         </Typography>
                         <Typography
                           as="a"
-                          href="#"
                           onClick={() => deleteData(user._id)}
                           className="text-xs font-semibold text-blue-gray-600"
                         >

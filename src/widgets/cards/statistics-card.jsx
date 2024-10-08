@@ -7,9 +7,9 @@ import {
 } from "@material-tailwind/react";
 import PropTypes from "prop-types";
 
-export function StatisticsCard({ color, icon, title, value, footer }) {
+export function StatisticsCard({ color, icon, title, value, footer, onClick }) {
   return (
-    <Card className="border border-blue-gray-100 shadow-sm">
+    <Card className="border border-blue-gray-100 shadow-sm cursor-pointer" onClick={() => onClick(title)}>
       <CardHeader
         variant="gradient"
         color={color}

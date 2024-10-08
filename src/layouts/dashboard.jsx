@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { UserPlusIcon } from "@heroicons/react/24/solid";
 import { IconButton } from "@material-tailwind/react";
 import {
@@ -24,13 +24,13 @@ import {
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useMaterialTailwindController, setOpenConfigurator } from "@/context";
 import Swal from 'sweetalert2'
-import fetchData from "@/data/user/fetchListUser";
-
+import axios from "axios";
 export function Dashboard() {
   const [controller, dispatch] = useMaterialTailwindController();
-  const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate()
   const { sidenavType } = controller;
   
+  const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(!open);
   
   const submitForm = async (e) => {
@@ -41,17 +41,10 @@ export function Dashboard() {
       name: nama.value,
       email: email.value,
       isActive: true,
-      nomor_induk: username.value,
+      number_id: username.value,
       password: password.value
     }
-    const response = await fetch('https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/user', {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: 'POST',
-      body: JSON.stringify(user)
-    })
-    console.log(await response.json());
+    const response = await axios.post('https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/user', user)
       handleOpen()
       Swal.fire({
         title: "Berhasil!",
@@ -59,7 +52,9 @@ export function Dashboard() {
         icon: "success",
         timer: 2000
       });
+      navigate('/anggota')
     } catch (error) {
+      console.log(error.message);
       handleOpen()
       Swal.fire({
         icon: "error",
