@@ -25,9 +25,13 @@ export function Anggota() {
   const MySwal = withReactContent(Swal)
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(!open);
-  const navigate = useNavigate()
   const [listUser, setListUser] = React.useState([])
-  const [editUser, setEditUser] = React.useState([])
+  const [formData, setFormData] = React.useState({
+    number_id: '',
+    name: '',
+    email: '',
+    password: ''
+  })
 
 
   useEffect( () => {
@@ -81,14 +85,10 @@ export function Anggota() {
     });
   }
 
-  const editData = async (id) => {
-    console.log(id)
-    const user = await axios.get(`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/user/${id}`)
-    const {data: {data}} = user
-    setEditUser(data)
+  const editData = async (user) => {
+    setFormData(user)
     setOpen(!open)
   }
-  
 
   return (
     <>
@@ -163,7 +163,7 @@ export function Anggota() {
                         <Typography
                           as="a"
                           href="#"
-                          onClick={() => editData(user._id)}
+                          onClick={() => editData(user)}
                           className="text-xs font-semibold text-blue-gray-600"
                         >
                          <PencilSquareIcon className="w-5 h-5" />
@@ -218,6 +218,7 @@ export function Anggota() {
                 color="gray"
                 size="lg"
                 name="weight"
+                value={formData.name}
                 className="placeholder:opacity-100 focus:!border-t-gray-900"
                 containerProps={{
                   className: "!min-w-full",
@@ -233,12 +234,13 @@ export function Anggota() {
                 color="blue-gray"
                 className="mb-2 text-left font-medium"
               >
-                Nomor Induk
+                Email
               </Typography>
               <Input
                 color="gray"
                 size="lg"
                 name="size"
+                value={formData.email}
                 className="placeholder:opacity-100 focus:!border-t-gray-900"
                 containerProps={{
                   className: "!min-w-full",
@@ -306,6 +308,7 @@ export function Anggota() {
                 color="gray"
                 size="lg"
                 name="weight"
+                value={formData.number_id}
                 className="placeholder:opacity-100 focus:!border-t-gray-900"
                 containerProps={{
                   className: "!min-w-full",
@@ -326,6 +329,31 @@ export function Anggota() {
               <Input
                 color="gray"
                 size="lg"
+                value={formData.password}
+                name="size"
+                className="placeholder:opacity-100 focus:!border-t-gray-900"
+                containerProps={{
+                  className: "!min-w-full",
+                }}
+                labelProps={{
+                  className: "hidden",
+                }}
+              />
+            </div>
+          </div>
+          <div className="flex gap-4">
+            <div className="w-full">
+              <Typography
+                variant="small"
+                color="blue-gray"
+                className="mb-2 text-left font-medium"
+              >
+                Status
+              </Typography>
+              <Input
+                color="gray"
+                size="lg"
+                value={formData.password}
                 name="size"
                 className="placeholder:opacity-100 focus:!border-t-gray-900"
                 containerProps={{
