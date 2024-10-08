@@ -18,6 +18,7 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import fetchData from "@/data/user/fetchListUser";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export function Anggota() {
 
@@ -26,6 +27,7 @@ export function Anggota() {
   const handleOpen = () => setOpen(!open);
   const navigate = useNavigate()
   const [listUser, setListUser] = React.useState([])
+  const [editUser, setEditUser] = React.useState([])
 
 
   useEffect( () => {
@@ -77,6 +79,14 @@ export function Anggota() {
         });
       }
     });
+  }
+
+  const editData = async (id) => {
+    console.log(id)
+    const user = await axios.get(`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/user/${id}`)
+    const {data: {data}} = user
+    setEditUser(data)
+    setOpen(!open)
   }
   
 
@@ -153,7 +163,7 @@ export function Anggota() {
                         <Typography
                           as="a"
                           href="#"
-                          onClick={handleOpen}
+                          onClick={() => editData(user._id)}
                           className="text-xs font-semibold text-blue-gray-600"
                         >
                          <PencilSquareIcon className="w-5 h-5" />
