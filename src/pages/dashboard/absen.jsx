@@ -2,14 +2,13 @@ import React from "react";
 import {
   Typography,
   Input,
-  Option,
-  Select,
+  Radio,
   Button,
   Dialog,
-  Textarea,
   DialogBody,
   DialogHeader,
   DialogFooter,
+  Textarea,
 } from "@material-tailwind/react";
 import { StatisticsCard } from "@/widgets/cards";
 import {statisticsCardsData} from "@/data";
@@ -40,10 +39,10 @@ export function Absen() {
           <Dialog size="lg" open={open} handler={handleOpen} className="p-4">
         <DialogHeader className="relative m-0 block">
           <Typography variant="h4" color="blue-gray">
-            Tambah Anggota
+            Form Absensi
           </Typography>
           <Typography className="mt-1 font-normal text-gray-600">
-            Masukkan data anggota dengan benar!
+            Silahkan isi Absensi dengan benar!
           </Typography>
           <IconButton
             size="sm"
@@ -56,134 +55,48 @@ export function Absen() {
         </DialogHeader>
         <DialogBody className="space-y-4 pb-6">
           
-          <div className="flex gap-4">
+          <div>
             <div className="w-full">
               <Typography
                 variant="small"
                 color="blue-gray"
                 className="mb-2 text-left font-medium"
               >
-                Nama
+                Status
               </Typography>
-              <Input
-                color="gray"
-                size="lg"
-                name="weight"
-                className="placeholder:opacity-100 focus:!border-t-gray-900"
-                containerProps={{
-                  className: "!min-w-full",
-                }}
-                labelProps={{
-                  className: "hidden",
-                }}
-              />
+              <div className="flex gap-10">
+                <Radio name="type" label="Hadir" />
+                <Radio name="type" label="Absen" defaultChecked />
+              </div>
             </div>
-            <div className="w-full">
+            <div className="mt-4 w-full">
               <Typography
                 variant="small"
                 color="blue-gray"
                 className="mb-2 text-left font-medium"
               >
-                Nomor Induk
+                Keterangan
               </Typography>
-              <Input
-                color="gray"
-                size="lg"
-                name="size"
-                className="placeholder:opacity-100 focus:!border-t-gray-900"
-                containerProps={{
-                  className: "!min-w-full",
-                }}
-                labelProps={{
-                  className: "hidden",
-                }}
-              />
+              <div className="w-full">
+                <Textarea label="ket" />
+              </div>
             </div>
-          </div>
-          <div className="flex gap-4">
-            <div className="w-full">
+            <div className="mt-5 w-full">
               <Typography
                 variant="small"
                 color="blue-gray"
                 className="mb-2 text-left font-medium"
               >
-                Asal Sekolah
+                Upload Bukti Keterangan
               </Typography>
               <Input
                 color="gray"
+                variant="outlined"
                 size="lg"
-                name="weight"
+                type="file"
                 className="placeholder:opacity-100 focus:!border-t-gray-900"
                 containerProps={{
                   className: "!min-w-full",
-                }}
-                labelProps={{
-                  className: "hidden",
-                }}
-              />
-            </div>
-            <div className="w-full">
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="mb-2 text-left font-medium"
-              >
-                Periode
-              </Typography>
-              <Input
-                color="gray"
-                size="lg"
-                name="size"
-                className="placeholder:opacity-100 focus:!border-t-gray-900"
-                containerProps={{
-                  className: "!min-w-full",
-                }}
-                labelProps={{
-                  className: "hidden",
-                }}
-              />
-            </div>
-          </div>
-          <div className="flex gap-4">
-            <div className="w-full">
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="mb-2 text-left font-medium"
-              >
-                Username
-              </Typography>
-              <Input
-                color="gray"
-                size="lg"
-                name="weight"
-                className="placeholder:opacity-100 focus:!border-t-gray-900"
-                containerProps={{
-                  className: "!min-w-full",
-                }}
-                labelProps={{
-                  className: "hidden",
-                }}
-              />
-            </div>
-            <div className="w-full">
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="mb-2 text-left font-medium"
-              >
-                Password
-              </Typography>
-              <Input
-                color="gray"
-                size="lg"
-                name="size"
-                className="placeholder:opacity-100 focus:!border-t-gray-900"
-                containerProps={{
-                  className: "!min-w-full",
-                }}
-                labelProps={{
-                  className: "hidden",
                 }}
               />
             </div>

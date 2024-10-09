@@ -50,7 +50,7 @@ export function Sidenav({ brandImg, brandName, routes }) {
       </div>
       <div className="m-4">
         {routes.map(({ layout, title, pages }, key) => {
-          const pageList = typeof pages == 'function' ? pages("Admin") : pages()
+          const pageList = typeof pages == 'function' ? pages("All") : pages()
           return (
             <ul key={key} className="mb-4 flex flex-col gap-1">
             {title && (

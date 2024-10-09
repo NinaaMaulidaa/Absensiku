@@ -7,6 +7,7 @@ import {
   Chip,
 } from "@material-tailwind/react";
 import { authorsTableData } from "@/data";
+import { PencilSquareIcon} from "@heroicons/react/24/outline";
 
 export function Kehadiran() {
   return (
@@ -21,14 +22,14 @@ export function Kehadiran() {
           <table className="w-full min-w-[640px] table-auto">
             <thead>
               <tr>
-                {["Nama", "Sekolah", "Jam Masuk", "Jam Keluar", "Status",].map((el) => (
+                {["Nama", "Sekolah", "Jam Masuk", "Jam Keluar", "Status", "Opsi"].map((el) => (
                   <th
                     key={el}
                     className="border-b border-blue-gray-50 py-3 px-5 text-left"
                   >
                     <Typography
                       variant="small"
-                      className={`text-[13px] font-bold ${el == "Jam Masuk" || el == "Jam Keluar" || el == "Status" ? `text-center` : ''} uppercase text-blue-gray-400`}
+                      className={`text-[13px] font-bold ${el == "Jam Masuk" || el == "Jam Keluar" || el == "Status" || el == "Opsi" ? `text-center` : ''} uppercase text-blue-gray-400`}
                     >
                       {el}
                     </Typography>
@@ -86,6 +87,17 @@ export function Kehadiran() {
                           value={status}
                           className="py-0.5 px-2 text-[10px] font-medium w-fit flex justify-center"
                         />
+                        </div>
+                      </td>
+                      <td>
+                        <div className="flex justify-center items-center">
+                        <Typography
+                          as="a"
+                          href="#"
+                          className="text-xs font-semibold text-blue-gray-600"
+                        >
+                         <PencilSquareIcon className="w-5 h-5" />
+                        </Typography>
                         </div>
                       </td>
                     </tr>
