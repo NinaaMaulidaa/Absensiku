@@ -13,16 +13,16 @@ export function SignIn() {
           className="h-full w-full object-cover rounded-r-full"
         />
         </div>
-      <div className="w-full lg:w-3/5 flex flex-col items-center justify-center " >
+      <div className="w-full lg:w-3/5 flex lg:gap-2 gap-5 flex-col items-center justify-center " >
         <div className="flex justify-end">
         <img
           src="https://3.bp.blogspot.com/-6Bq5Uk2tePI/Wflu6JX_KII/AAAAAAAAAVM/u1XUaIpGW9MjnRDQ1vfXf0HHvMOQrdRZgCLcBGAs/s1600/New-Logo-TA-2016.png"
           className="m-4 h-auto w-72"
         />
         </div>
-        <div className="text-center">
-          <Typography variant="h1" className=" font-bold my-4">Sign-In</Typography>
-          <Typography variant="paragraph" color="blue-gray" className="text-lg  font-normal">Enter your username and password to Sign In.</Typography>
+        <div className="text-center w-4/5 lg:w-full">
+          {/* <Typography variant="h1" className="my-4">Sign-In</Typography> */}
+          <Typography variant="paragraph" color="blue-gray" className="lg:text-lg text-sm font-normal">Enter your username and password to Sign In.</Typography>
         </div>
 
         <form className="mt-8 mb-2 mx-auto w-80 max-w-screen-lg lg:w-1/2">

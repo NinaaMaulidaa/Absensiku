@@ -36,11 +36,13 @@ export function Auth() {
     <div className="relative min-h-screen w-full">
       <Routes>
         {routes.map(
-          ({ layout, pages }) =>
-            layout === "auth" &&
-            pages.map(({ path, element }) => (
+          ({ layout, pages }) => {
+            const pageList = typeof pages == 'function' ? pages("All") : pages()
+            return layout === "auth" &&
+            pageList.map(({ path, element }) => (
               <Route exact path={path} element={element} />
             ))
+          }
         )}
       </Routes>
     </div>

@@ -13,16 +13,16 @@ export function ChangePw() {
           className="h-full w-full object-cover rounded-r-full"
         />
       </div>
-      <div className="w-full lg:w-3/5 flex flex-col items-center justify-center">
+      <div className="w-full lg:w-3/5 flex lg:gap-2 gap-5 flex-col items-center justify-center">
       <div className="flex justify-start">
         <img
           src="https://3.bp.blogspot.com/-6Bq5Uk2tePI/Wflu6JX_KII/AAAAAAAAAVM/u1XUaIpGW9MjnRDQ1vfXf0HHvMOQrdRZgCLcBGAs/s1600/New-Logo-TA-2016.png"
           className="m-4 h-auto w-72"
         />
         </div>
-        <div className="text-center">
-          <Typography variant="h2" className="font-bold my-4">Change Password</Typography>
-          <Typography variant="paragraph" color="blue-gray" className="text-lg font-normal">Enter your email and password to Change Password.</Typography>
+        <div className="text-center w-4/5 lg:w-full">
+          {/* <Typography variant="h2" className="font-bold my-4">Change Password</Typography> */}
+          <Typography variant="paragraph" color="blue-gray" className="lg:text-lg text-sm font-normal">Enter your email and password to Change Password.</Typography>
         </div>
         <form className="mt-8 mb-2 mx-auto w-80 max-w-screen-lg lg:w-1/2">
           <div className="mb-1 flex flex-col gap-6">
