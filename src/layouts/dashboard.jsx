@@ -31,16 +31,17 @@ export function Dashboard() {
   const { sidenavType } = controller;
   
   const [open, setOpen] = React.useState(false);
+  const [status, setStatus] = React.useState(true);
   const handleOpen = () => setOpen(!open);
   
   const submitForm = async (e) => {
     e.preventDefault()
     try {
-      const {nama, username, email, status, password} = e.target
+      const {nama, username, email, password} = e.target
     const user = {
       name: nama.value,
       email: email.value,
-      isActive: true,
+      isActive: status,
       number_id: username.value,
       password: password.value
     }
@@ -63,6 +64,10 @@ export function Dashboard() {
         timer: 2000
       });
     }
+  }
+
+  const changeStatus = (value) => {
+    setStatus(value)
   }
 
   return (
@@ -121,7 +126,7 @@ export function Dashboard() {
         </DialogHeader>
         <DialogBody className="space-y-4 pb-6">
         <form action="" onSubmit={(e) => submitForm(e)}>
-          <div className="flex gap-4">
+          <div className="flex gap-4 mb-3">
             <div className="w-full">
               <Typography
                 variant="small"
@@ -165,7 +170,7 @@ export function Dashboard() {
               />
             </div>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-4 mb-3">
             <div className="w-full">
               <Typography
                 variant="small"
@@ -218,9 +223,9 @@ export function Dashboard() {
               >
                 Status
               </Typography>
-              <Select label="Select Status" name="status">
-                <Option value="true">Active</Option>
-                <Option value="false">Non Active</Option>
+              <Select label="Select Status" name="status" value={status} onChange={changeStatus}>
+                <Option value={true}>Active</Option>
+                <Option value={false}>Non Active</Option>
               </Select>
             </div>
           </div>

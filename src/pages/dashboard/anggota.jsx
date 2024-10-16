@@ -5,19 +5,22 @@ import {
   Typography,
   Input,
   Button,
+  Textarea,
   Dialog,
+  Select,
+  Option,
   DialogBody,
   DialogHeader,
   DialogFooter,
   IconButton,
   Avatar
 } from "@material-tailwind/react";
+import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
 import React, { useEffect } from "react";
 import {TrashIcon, PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import fetchData from "@/data/user/fetchListUser";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export function Anggota() {
@@ -26,20 +29,32 @@ export function Anggota() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(!open);
   const [listUser, setListUser] = React.useState([])
+  const [idUser, setIdUser] = React.useState("")
+  var [name, setName] = React.useState("")
+  const [status, setStatus] = React.useState(true)
   const [formData, setFormData] = React.useState({
     number_id: '',
     name: '',
     email: '',
-    password: ''
+    password: '',
+    institution: '',
+    address: '',
+    image: null,
+    isActive: '',
+    contactNumber: '',
+    description: '',
+    internship_period: ''
   })
 
+  const [active, setActive] = React.useState(1);
+  const [page, setPage] = React.useState();
 
   useEffect( () => {
     const fetchList = async () => {
       try {
-        const { data } = await fetchData(); // Wait for the data
-        console.log(data);
-        setListUser(data); // Set the resolved data to state
+        const { data } = await fetchData({active: null}); 
+        setPage(data.pages)
+        setListUser(data.data); 
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -47,6 +62,54 @@ export function Anggota() {
   
     fetchList();
   }, [])
+
+  useEffect( () => {
+    const fetchList = async () => {
+      try {
+        const { data } = await fetch(`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/user?${name}`)
+        setPage(data.pages)
+        setListUser(data.data); 
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+  
+    fetchList();
+  }, [name])
+ 
+  const getItemProps = (index) => {
+    return {
+      variant: active === index ? "filled" : "text",
+      color: "gray",
+      onClick: () => setActive(index),
+    }
+  };
+ 
+  const next = async () => {
+    if (active === 5) return;
+ 
+    setActive(active + 1);
+  };
+ 
+  const prev = () => {
+    if (active === 1) return;
+ 
+    setActive(active - 1);
+  };
+
+  useEffect(() => {
+    const fetchList = async () => {
+      try {
+        const { data } = await fetchData({active: active}); 
+        setPage(data.pages)
+        setListUser(data.data); 
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+  
+    fetchList();
+  }, [active])
 
   const deleteData = (id) => {
     MySwal.fire({
@@ -85,9 +148,87 @@ export function Anggota() {
     });
   }
 
+  const handleFileChange = (e) => {
+    setFormData({
+      ...formData,
+      image: e.target.files[0]
+    })
+  }
+
   const editData = async (user) => {
-    setFormData(user)
+    setFormData({
+      number_id: user.number_id,
+    name: user.name,
+    email: user.email,
+    password: user.password,
+    institution: user.institution,
+    address: user.address,
+    image: user.image,
+    isActive: user.isActive,
+    contactNumber: user.contactNumber,
+    description: user.description,
+    internship_period: user.internship_period
+    })
+    setIdUser(user._id)
     setOpen(!open)
+  }
+
+  const submitData = async (e) => {
+    e.preventDefault()
+    if(!formData.image || !formData.name ) {
+      Swal.fire({
+        title: "Gagal!",
+        text: "Pastikan semua data telah diisi dengan benar!",
+        icon: "error",
+        timer: 2000
+      });
+      return;
+    }
+    try {
+      const dataToSubmit = new FormData();
+    for (const key in formData) {
+      dataToSubmit.append(key, formData[key]);
+    }
+    
+      const response = await axios.put(`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/user/${idUser}`, dataToSubmit, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // Header untuk file upload
+        },
+      })
+      setOpen(!open)
+      const {data} = await fetchData()
+          setListUser(data)
+      Swal.fire({
+        title: "Diupdate!",
+        text: "Data berhasil di update!.",
+        icon: "success",
+        timer: 2000
+      });
+    } catch (error) {
+      setOpen(!open)
+      Swal.fire({
+        title: "Gagal!",
+        text: error,
+        icon: "error",
+        timer: 2000
+      });
+    }
+  }
+
+  const handleChange = (e) => {
+    const {name, value} = e.target
+    setFormData({
+      ...formData,
+      [name]: value
+    })
+  }
+
+  const handleStatusChange = (value) => {
+    setStatus(value)
+    setFormData({
+      ...formData,
+      status: value
+    })
   }
 
   return (
@@ -131,7 +272,7 @@ export function Anggota() {
                     <tr key={key}>
                       <td className={className}>
                         <div className="flex items-center gap-4">
-                          <Avatar src={user.image} alt={user.image} size="sm" variant="rounded" />
+                          <Avatar src={`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/files/${user.image}`} alt={user.image} size="sm" className="rounded-full"/>
                           <div>
                             <Typography
                               variant="small"
@@ -155,7 +296,7 @@ export function Anggota() {
                       </td>
                       <td className={className}>
                         <Typography className="text-xs font-semibold text-blue-gray-600 text-center">
-                          {user.periode}
+                          {user.internship_period}
                         </Typography>
                       </td>
                       <td className={className}>
@@ -184,12 +325,39 @@ export function Anggota() {
             </tbody>
           </table>
         </CardBody>
+          <div className="flex items-center my-4 justify-center gap-4">
+      <Button
+        variant="text"
+        className="flex items-center gap-2"
+        onClick={prev}
+        disabled={active === 1}
+      >
+        <ArrowLeftIcon strokeWidth={2} className="h-4 w-4" /> Previous
+      </Button>
+      <div className="flex items-center gap-2">
+        {Array.from({length: page}, (_, i) => {
+          i += 1
+          return (
+            <IconButton {...getItemProps(i)}>{i}</IconButton>
+            )
+        })}
+      </div>
+      <Button
+        variant="text"
+        className="flex items-center gap-2"
+        onClick={next}
+        disabled={active === 5}
+      >
+        Next
+        <ArrowRightIcon strokeWidth={2} className="h-4 w-4" />
+      </Button>
+    </div>
       </Card>
     </div>
-    <Dialog size="lg" open={open} handler={handleOpen} className="p-4">
+    <Dialog size="xl" open={open} handler={handleOpen} className="p-4">
         <DialogHeader className="relative m-0 block">
           <Typography variant="h4" color="blue-gray">
-            Tambah Anggota
+            Edit Data Anggota
           </Typography>
           <Typography className="mt-1 font-normal text-gray-600">
             Masukkan data anggota dengan benar!
@@ -205,177 +373,134 @@ export function Anggota() {
         </DialogHeader>
         <DialogBody className="space-y-4 pb-6">
           
-          <div className="flex gap-4">
+          <form onSubmit={submitData}>
+          <div className="flex gap-4 mb-4">
             <div className="w-full">
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="mb-2 text-left font-medium"
-              >
-                Nama
-              </Typography>
               <Input
                 color="gray"
-                size="lg"
-                name="weight"
+                size="sm"
+                name="name"
                 value={formData.name}
-                className="placeholder:opacity-100 focus:!border-t-gray-900"
-                containerProps={{
-                  className: "!min-w-full",
-                }}
-                labelProps={{
-                  className: "hidden",
-                }}
+                onChange={handleChange}
+                className="placeholder:opacity-100"
+                label="Nama"
               />
             </div>
             <div className="w-full">
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="mb-2 text-left font-medium"
-              >
-                Email
-              </Typography>
               <Input
                 color="gray"
-                size="lg"
-                name="size"
+                size="sm"
+                name="email"
+                label="Email"
                 value={formData.email}
-                className="placeholder:opacity-100 focus:!border-t-gray-900"
-                containerProps={{
-                  className: "!min-w-full",
-                }}
-                labelProps={{
-                  className: "hidden",
-                }}
-              />
-            </div>
-          </div>
-          <div className="flex gap-4">
-            <div className="w-full">
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="mb-2 text-left font-medium"
-              >
-                Asal Sekolah
-              </Typography>
-              <Input
-                color="gray"
-                size="lg"
-                name="weight"
-                className="placeholder:opacity-100 focus:!border-t-gray-900"
-                containerProps={{
-                  className: "!min-w-full",
-                }}
-                labelProps={{
-                  className: "hidden",
-                }}
+                onChange={handleChange}
+                className="placeholder:opacity-100"
               />
             </div>
             <div className="w-full">
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="mb-2 text-left font-medium"
-              >
-                Periode
-              </Typography>
               <Input
                 color="gray"
-                size="lg"
-                name="size"
-                className="placeholder:opacity-100 focus:!border-t-gray-900"
-                containerProps={{
-                  className: "!min-w-full",
-                }}
-                labelProps={{
-                  className: "hidden",
-                }}
-              />
-            </div>
-          </div>
-          <div className="flex gap-4">
-            <div className="w-full">
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="mb-2 text-left font-medium"
-              >
-                Username
-              </Typography>
-              <Input
-                color="gray"
-                size="lg"
-                name="weight"
+                size="sm"
+                label="number_id"
+                name="number_id"
                 value={formData.number_id}
-                className="placeholder:opacity-100 focus:!border-t-gray-900"
-                containerProps={{
-                  className: "!min-w-full",
-                }}
-                labelProps={{
-                  className: "hidden",
-                }}
+                onChange={handleChange}
+                className="placeholder:opacity-100"
               />
             </div>
             <div className="w-full">
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="mb-2 text-left font-medium"
-              >
-                Password
-              </Typography>
               <Input
                 color="gray"
-                size="lg"
+                size="sm"
+                label="password"
+                name="password"
                 value={formData.password}
-                name="size"
-                className="placeholder:opacity-100 focus:!border-t-gray-900"
-                containerProps={{
-                  className: "!min-w-full",
-                }}
-                labelProps={{
-                  className: "hidden",
-                }}
+                onChange={handleChange}
+                className="placeholder:opacity-100"
               />
             </div>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-4 mb-4">
             <div className="w-full">
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="mb-2 text-left font-medium"
-              >
-                Status
-              </Typography>
               <Input
                 color="gray"
-                size="lg"
-                value={formData.password}
-                name="size"
-                className="placeholder:opacity-100 focus:!border-t-gray-900"
-                containerProps={{
-                  className: "!min-w-full",
-                }}
-                labelProps={{
-                  className: "hidden",
-                }}
+                size="sm"
+                name="institution"
+                value={formData.institution}
+                onChange={handleChange}
+                className="placeholder:opacity-100"
+                label="Asal Sekolah"
+              />
+            </div>
+            <div className="w-full">
+              <Input
+                color="gray"
+                size="sm"
+                name="internship_period"
+  value={formData.internship_period}
+                onChange={handleChange}
+                className="placeholder:opacity-100"
+                label="Periode"
+              />
+            </div>
+            <div className="w-full">
+              <Input
+                color="gray"
+                size="sm"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                className="placeholder:opacity-100"
+                label="Alamat"
+              />
+            </div>
+            <div className="w-full">
+              <Input
+                color="gray"
+                size="sm"
+                name="contactNumber"
+                value={formData.contactNumber}
+                onChange={handleChange}
+                className="placeholder:opacity-100"
+                label="No. Telepon"
               />
             </div>
           </div>
-        </DialogBody>
+          <div className="flex gap-4 mb-4">
+            <div className="w-full">
+            <Textarea label="Deskripsi" onChange={handleChange} value={formData.description} name="description"/>
+            </div>
+          </div>
+          <div className="flex gap-4 mb-4">
+            <div className="w-full">
+              <Select label="Select Status" name="status" value={status} onChange={(value) => handleStatusChange(value)}>
+                <Option value={true}>Active</Option>
+                <Option value={false}>Non Active</Option>
+              </Select>
+            </div>
+            <div className="w-full">
+              <Input
+                color="gray"
+                size="sm"
+                name="image"
+                // value={formData.image}
+                onChange={handleFileChange}
+                type="file"
+                className="placeholder:opacity-100"
+                label="Foto"
+              />
+            </div>
+          </div>
         <DialogFooter>
-          <Button className="ml-auto" onClick={handleOpen}>
+          <Button type="sumbit" className="ml-auto">
             Simpan
           </Button>
         </DialogFooter>
+          </form>
+        </DialogBody>
       </Dialog>
     </>
   );
-
-  
 }
 
 export default Anggota;
