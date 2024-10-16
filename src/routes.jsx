@@ -21,7 +21,7 @@ export const routes = [
         const pages = [
           {
             icon: <UserCircleIcon {...icon} />,
-            name: "Profle",
+            name: "Profile",
             path: "/profile",
             element: <Profile />,
           },
@@ -44,7 +44,7 @@ export const routes = [
         return [
           {
             icon: <UserCircleIcon {...icon} />,
-            name: "Profle",
+            name: "Profile",
             path: "/profile",
             element: <Profile />,
           },
