@@ -21,8 +21,33 @@ import {
   import { Link } from "react-router-dom";
   import { ProfileInfoCard, MessageCard } from "@/widgets/cards";
   import { platformSettingsData, conversationsData, projectsData } from "@/data";
+import { useUserLogin } from "@/context/user";
+import { useEffect, useState } from "react";
+import axios from "axios";
   
   export function Profile() {
+    const [user, setUser] = useUserLogin()
+    console.log(user);
+    const [data, setData] = useState({
+      name: '',
+      number_id: '',
+      description: '',
+      email: '',
+      contactNumber: '',
+      institution: '',
+      internship_period: '',
+      image: '',
+      address: ''
+    })
+
+    useEffect(() => {
+      const fetchData = async () => {
+        const response = await axios.get(`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/user/${user.id}`)
+        setData(response.data.data)
+      }
+      fetchData()
+    }, [])
+
     return (
       <>
         <div className="relative mt-8 h-72 w-full overflow-hidden rounded-xl bg-[url('/img/background-image.png')] bg-cover	bg-center">
@@ -33,7 +58,7 @@ import {
             <div className="mb-10 flex items-center justify-between flex-wrap gap-6">
               <div className="flex items-center gap-6">
                 <Avatar
-                  src="https://media.licdn.com/dms/image/v2/D5603AQE4bwScCRx-Og/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1718366278503?e=1733961600&v=beta&t=csDgJ4R318KSXY5DHvtxsd2G4SJnqYAPKd6-YD0TJMk"
+                  src={`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/files/${data.image}`}
                   alt="bruce-mars"
                   size="xl"
                   variant="rounded"
@@ -41,7 +66,7 @@ import {
                 />
                 <div>
                   <Typography variant="h5" color="blue-gray" className="mb-1">
-                    Nina Krisna Maulida
+                    {data.name}
                   </Typography>
                   <Typography
                     variant="small"
@@ -56,13 +81,12 @@ import {
             <div className="mb-12 px-4">
               <ProfileInfoCard
                 title="Profile Information"
-                description="I am a 6th semester student at STMIK Mardira Indonesia in Bandung, focusing on honing my skills in information technology. During this time, I have learned the basics of computer science and deepened my programming knowledge. In addition, I am also actively involved in the Student Executive Board (BEM) on campus, where I contribute to various organizational activities, program development, and initiatives that aim to enhance the learning experience and build a strong community among students.
-"
+                description={data.description ? data.description : `Nama saya ${data.name}. Saya adalah seorang Mahasiswa/Siswa di ${data.institution}, dan saat ini tinggal di ${data.address}dengan nomor telepon yang dapat dihubungi ${data.contactNumber}, serta alamat email aktif ${data.email}.`}
                 details={{
-                  "username": "2115354015",
-                  telepon: "082147390668",
-                  email: "ninakrsn@gmail.com",
-                  "sekolah / kampus": "STMIK Mandira Indonesia",
+                  "username": data.number_id,
+                  telepon: data.contactNumber,
+                  email: data.email,
+                  "sekolah / kampus": data.institution,
                 }}
                 action={
                   <Tooltip content="Edit Profile">

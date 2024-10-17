@@ -15,12 +15,21 @@ import {
   setOpenConfigurator,
   setOpenSidenav,
 } from "@/context";
+import { useSearch } from "@/context/search";
 
 export function DashboardNavbar() {
+  const [name, setName] = useSearch()
   const [controller, dispatch] = useMaterialTailwindController();
   const { fixedNavbar, openSidenav } = controller;
   const { pathname } = useLocation();
   const [layout, page] = pathname.split("/").filter((el) => el !== "");
+
+  const findData = (e) => {
+    setName(e.target.value);
+    console.log(name);
+  }
+
+  const location = useLocation()
 
   return (
     <Navbar
@@ -62,9 +71,9 @@ export function DashboardNavbar() {
           </Typography>
         </div>
         <div className="flex items-center">
-          <div className="mr-auto md:mr-4 md:w-56">
-            <Input label="Search" />
-          </div>
+          {location.pathname !== '/dashboard/profile' && location.pathname !== '/dashboard/absen' ? <div className="mr-auto md:mr-4 md:w-56">
+            <Input label="Search" name="search" onChange={(e) => findData(e)}/>
+          </div> : <div></div>}
             <IconButton
               variant="text"
               color="blue-gray"

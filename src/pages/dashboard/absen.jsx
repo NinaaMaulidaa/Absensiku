@@ -13,7 +13,7 @@ import {
 import { StatisticsCard } from "@/widgets/cards";
 import {statisticsCardsData} from "@/data";
 import { IconButton } from "@material-tailwind/react";
-import { XMarkIcon } from "@heroicons/react/24/outline";
+import { XMarkIcon, CursorArrowRippleIcon, PowerIcon } from "@heroicons/react/24/outline";
 
 export function Absen() {
   const [open, setOpen] = React.useState(false);
@@ -21,20 +21,43 @@ export function Absen() {
     console.log(value);
     setOpen(!open)
   };
+  
+  const [status, setStatus] = React.useState(false)
+  const statusAbsen = () => {
+    setStatus(!status)
+  }
+
+  const [formData, setFormData] = React.useState({
+    userId: '123123123',
+    status: '',
+    notes: '',
+    file: ''
+  })
+  const createAbsensi = (e) => {
+    e.preventDefault()
+    console.log("object");
+  }
     return (
         <div className="mt-12">
-          <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
-            {statisticsCardsData.map(({ icon, title, ...rest }) => (
+          <div className="mb-12 grid gap-y-5 lg:gap-y-10 lg:gap-x-80 gap-x-10 md:grid-cols-2 xl:grid-cols-4">
+            {/* {statisticsCardsData.map(({ icon, title, ...rest }) => ( */}
               <StatisticsCard
-                key={title}
-                {...rest}
-                title={title}
-                icon={React.createElement(icon, {
-                  className: "w-6 h-6 text-white",
+              className='bg-green-700'
+                title='Presensi'
+                icon={React.createElement(CursorArrowRippleIcon, {
+                  className: "w-6 h-6 text-green-700",
                 })}
                 onClick={handleOpen}
               />
-            ))}
+              <StatisticsCard
+              className='bg-red-400'
+                title='Pulang'
+                icon={React.createElement(PowerIcon, {
+                  className: "w-6 h-6 text-red-400",
+                })}
+                onClick={handleOpen}
+              />
+            {/* ))} */}
           </div>
           <Dialog size="lg" open={open} handler={handleOpen} className="p-4">
         <DialogHeader className="relative m-0 block">
@@ -55,6 +78,7 @@ export function Absen() {
         </DialogHeader>
         <DialogBody className="space-y-4 pb-6">
           
+          <form onSubmit={() => createAbsensi(e)}>
           <div>
             <div className="w-full">
               <Typography
@@ -65,11 +89,12 @@ export function Absen() {
                 Status
               </Typography>
               <div className="flex gap-10">
-                <Radio name="type" label="Hadir" />
-                <Radio name="type" label="Absen" defaultChecked />
+                <Radio name="type" label="Hadir" defaultChecked onChange={statusAbsen}/>
+                <Radio name="type" label="Absen" onChange={statusAbsen}/>
               </div>
             </div>
-            <div className="mt-4 w-full">
+            {status && <>
+              <div className="mt-4 w-full">
               <Typography
                 variant="small"
                 color="blue-gray"
@@ -78,7 +103,7 @@ export function Absen() {
                 Keterangan
               </Typography>
               <div className="w-full">
-                <Textarea label="ket" />
+                <Textarea label="ket" defaultValue='-'/>
               </div>
             </div>
             <div className="mt-5 w-full">
@@ -93,6 +118,7 @@ export function Absen() {
                 color="gray"
                 variant="outlined"
                 size="lg"
+                defaultValue="-"
                 type="file"
                 className="placeholder:opacity-100 focus:!border-t-gray-900"
                 containerProps={{
@@ -100,13 +126,15 @@ export function Absen() {
                 }}
               />
             </div>
-          </div>
-        </DialogBody>
+            </>}
         <DialogFooter>
-          <Button className="ml-auto" onClick={handleOpen}>
+          <Button type="submit" className="ml-auto">
             Simpan
           </Button>
         </DialogFooter>
+          </div>
+          </form>
+        </DialogBody>
       </Dialog>
         </div>
       );

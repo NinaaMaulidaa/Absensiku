@@ -22,6 +22,7 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import fetchData from "@/data/user/fetchListUser";
 import axios from "axios";
+import { useSearch } from "@/context/search";
 
 export function Anggota() {
 
@@ -30,7 +31,7 @@ export function Anggota() {
   const handleOpen = () => setOpen(!open);
   const [listUser, setListUser] = React.useState([])
   const [idUser, setIdUser] = React.useState("")
-  var [name, setName] = React.useState("")
+  var [name, setName] = useSearch()
   const [status, setStatus] = React.useState(true)
   const [formData, setFormData] = React.useState({
     number_id: '',
@@ -40,7 +41,7 @@ export function Anggota() {
     institution: '',
     address: '',
     image: null,
-    isActive: '',
+    isActive: status,
     contactNumber: '',
     description: '',
     internship_period: ''
@@ -63,12 +64,19 @@ export function Anggota() {
     fetchList();
   }, [])
 
+
   useEffect( () => {
     const fetchList = async () => {
       try {
-        const { data } = await fetch(`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/user?${name}`)
+        if(name) {
+          const { data } = await axios.get(`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/user?name=${name}`)
+          setListUser(data.data);
+        } else {
+
+          const { data } = await fetchData({active: null}); 
         setPage(data.pages)
         setListUser(data.data); 
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -128,8 +136,8 @@ export function Anggota() {
             "Content-Type": "application/json",
           },
         }).then(async(result) => {
-          const {data} = await fetchData()
-          setListUser(data)
+          const {data} = await fetchData({active: active})
+          setListUser(data.data)
           Swal.fire({
             title: "Dihapus!",
             text: "Data berhasil di hapus!.",
@@ -137,6 +145,7 @@ export function Anggota() {
             timer: 2000
           });
         }).catch((err) => {
+          console.log(err);
           Swal.fire({
             title: "Gagal!",
             text: "Data gagal di hapus!.",
@@ -196,8 +205,8 @@ export function Anggota() {
         },
       })
       setOpen(!open)
-      const {data} = await fetchData()
-          setListUser(data)
+      const {data} = await fetchData({active: active})
+          setListUser(data.data)
       Swal.fire({
         title: "Diupdate!",
         text: "Data berhasil di update!.",
@@ -205,12 +214,12 @@ export function Anggota() {
         timer: 2000
       });
     } catch (error) {
+      console.log(error);
       setOpen(!open)
       Swal.fire({
         title: "Gagal!",
         text: error,
         icon: "error",
-        timer: 2000
       });
     }
   }
@@ -303,16 +312,15 @@ export function Anggota() {
                         <div className="flex gap-3 justify-center items-center">
                         <Typography
                           as="a"
-                          href="#"
                           onClick={() => editData(user)}
-                          className="text-xs font-semibold text-blue-gray-600"
+                          className="text-xs font-semibold text-blue-gray-600 cursor-pointer"
                         >
                          <PencilSquareIcon className="w-5 h-5" />
                         </Typography>
                         <Typography
                           as="a"
                           onClick={() => deleteData(user._id)}
-                          className="text-xs font-semibold text-blue-gray-600"
+                          className="text-xs font-semibold text-blue-gray-600 cursor-pointer"
                         >
                         <TrashIcon className="w-5 h-5" />
                         </Typography>

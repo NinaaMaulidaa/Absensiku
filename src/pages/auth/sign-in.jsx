@@ -1,10 +1,44 @@
+import { useUserLogin } from "@/context/user";
 import {
   Input,
   Button,
   Typography,
 } from "@material-tailwind/react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export function SignIn() {
+  const navigate = useNavigate()
+  const [user, setUser] = useUserLogin()
+  const loginAction = async (e) => {
+    e.preventDefault()
+    try {
+      const login = {
+        number_id: e.target.username.value,
+        password: e.target.password.value,
+      };
+    
+      const response = await axios.post('https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/auth/login', login);
+      console.log(response);
+    
+      const token = response.data.data.access_token;
+      const tokenParts = token.split('.');
+      
+      if (tokenParts.length === 3) {
+        const decodedPayload = JSON.parse(window.atob(tokenParts[1]));
+        setUser({
+          number_id: decodedPayload.number_id,
+          id: decodedPayload.id,
+          email: decodedPayload.email
+        })
+        navigate('/dashboard/profile')
+      } else {
+        console.error('Invalid JWT token format');
+      }
+    } catch (error) {
+      console.error('Login failed', error);
+    }
+  }
   return (
     <section className="h-screen gap-4 flex">
       <div className="w-2/5 h-full hidden lg:block">
@@ -25,7 +59,7 @@ export function SignIn() {
           <Typography variant="paragraph" color="blue-gray" className="lg:text-lg text-sm font-normal">Enter your username and password to Sign In.</Typography>
         </div>
 
-        <form className="mt-8 mb-2 mx-auto w-80 max-w-screen-lg lg:w-1/2">
+        <form className="mt-8 mb-2 mx-auto w-80 max-w-screen-lg lg:w-1/2" onSubmit={loginAction}>
           <div className="mb-1 flex flex-col gap-6">
             <Typography variant="small" color="blue-gray" className="-mb-3 font-medium ">
               Username
@@ -34,6 +68,7 @@ export function SignIn() {
               size="lg"
               placeholder="username"
               className=" !border-t-blue-gray-200 focus:!border-t-gray-900 "
+              name="username"
               labelProps={{
                 className: "before:content-none after:content-none",
               }}
@@ -45,6 +80,7 @@ export function SignIn() {
             <Input
               type="password"
               size="lg"
+              name="password"
               placeholder="********"
               className=" !border-t-blue-gray-200 focus:!border-t-gray-900 "
               labelProps={{
@@ -54,11 +90,11 @@ export function SignIn() {
           </div>
 
           <div>
-          <a href="/dashboard/anggota">
-          <Button className="mt-6 " fullWidth>
+          {/* <a href="/dashboard/anggota"> */}
+          <Button type="submit" className="mt-6 " fullWidth>
             Sign-In
             </Button>
-            </a>
+            {/* </a> */}
           
           </div>
 
