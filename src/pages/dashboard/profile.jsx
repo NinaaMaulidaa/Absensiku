@@ -18,16 +18,20 @@ import {
     Cog6ToothIcon,
     PencilIcon,
   } from "@heroicons/react/24/solid";
-  import { Link } from "react-router-dom";
+  import { Link, useNavigate } from "react-router-dom";
   import { ProfileInfoCard, MessageCard } from "@/widgets/cards";
   import { platformSettingsData, conversationsData, projectsData } from "@/data";
 import { useUserLogin } from "@/context/user";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import axios from "axios";
+import { AuthContext } from "@/context/auth";
   
   export function Profile() {
-    const [user, setUser] = useUserLogin()
-    console.log(user);
+    const { user } = useContext(AuthContext);
+    const navigate = useNavigate()
+    if(!user) {
+      return navigate('/auth/sign-in')
+    }
     const [data, setData] = useState({
       name: '',
       number_id: '',

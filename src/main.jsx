@@ -18,17 +18,18 @@ import { MaterialTailwindControllerProvider } from "@/context";
 import UserLoginContextProvider from "./context/user.jsx";
 import "../public/css/tailwind.css";
 import SearchContextProvider from "./context/search";
+import { AuthProvider } from '@/context/auth';
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
   <BrowserRouter>
     <ThemeProvider>
       <MaterialTailwindControllerProvider>
-        <UserLoginContextProvider>
+        <AuthProvider>
           <SearchContextProvider>
           <App />
           </SearchContextProvider>
-        </UserLoginContextProvider>
+        </AuthProvider>
       </MaterialTailwindControllerProvider>
     </ThemeProvider>
   </BrowserRouter>

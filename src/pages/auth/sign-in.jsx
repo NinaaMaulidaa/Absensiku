@@ -6,19 +6,22 @@ import {
 } from "@material-tailwind/react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from '@/context/auth';
+import Cookies from 'js-cookie';
+import { useContext } from "react";
 
 export function SignIn() {
   const navigate = useNavigate()
-  const [user, setUser] = useUserLogin()
+  const { login } = useContext(AuthContext);
   const loginAction = async (e) => {
     e.preventDefault()
     try {
-      const login = {
+      const userData = {
         number_id: e.target.username.value,
         password: e.target.password.value,
       };
     
-      const response = await axios.post('https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/auth/login', login);
+      const response = await axios.post('https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/auth/login', userData);
       console.log(response);
     
       const token = response.data.data.access_token;
@@ -26,11 +29,12 @@ export function SignIn() {
       
       if (tokenParts.length === 3) {
         const decodedPayload = JSON.parse(window.atob(tokenParts[1]));
-        setUser({
+        login({userData: {
           number_id: decodedPayload.number_id,
           id: decodedPayload.id,
           email: decodedPayload.email
-        })
+        }, token: token})
+        Cookies.set('token', token, { expires: 1, path: '/' });
         navigate('/dashboard/profile')
       } else {
         console.error('Invalid JWT token format');

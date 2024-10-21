@@ -281,7 +281,7 @@ export function Anggota() {
                     <tr key={key}>
                       <td className={className}>
                         <div className="flex items-center gap-4">
-                          <Avatar src={`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/files/${user.image}`} alt={user.image} size="sm" className="rounded-full"/>
+                          <Avatar src={`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/files/${user.image}`} alt={user.image} size="sm" className="rounded-lg"/>
                           <div>
                             <Typography
                               variant="small"

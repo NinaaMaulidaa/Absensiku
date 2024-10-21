@@ -1,4 +1,5 @@
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { useContext } from "react";
 import { UserPlusIcon } from "@heroicons/react/24/solid";
 import { IconButton } from "@material-tailwind/react";
 import {
@@ -25,11 +26,19 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useMaterialTailwindController, setOpenConfigurator } from "@/context";
 import Swal from 'sweetalert2'
 import axios from "axios";
+import { AuthContext } from '@/context/auth';
+import Cookies from "js-cookie";
 export function Dashboard() {
+  const { user, logout, isAuthenticated } = useContext(AuthContext);
   const [controller, dispatch] = useMaterialTailwindController();
   const navigate = useNavigate()
   const { sidenavType } = controller;
-  
+  if (!isAuthenticated) {
+    navigate('/auth/sign-in')
+  }
+  if (!Cookies.get('token')) {
+    navigate('/auth/sign-in')
+  }
   const [open, setOpen] = React.useState(false);
   const [status, setStatus] = React.useState(true);
   const handleOpen = () => setOpen(!open);

@@ -8,8 +8,11 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { useMaterialTailwindController, setOpenSidenav } from "@/context";
+import { useContext } from "react";
+import { AuthContext } from "@/context/auth";
 
 export function Sidenav({ brandImg, brandName, routes }) {
+  const {logout} = useContext(AuthContext)
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavColor, sidenavType, openSidenav } = controller;
   const sidenavTypes = {
@@ -66,6 +69,7 @@ export function Sidenav({ brandImg, brandName, routes }) {
             )}
             {pageList.map(({ icon, name, path }) => (
               <li key={name}>
+              {name !== "Log Out" ? (
                 <NavLink to={`/${layout}${path}`}>
                   {({ isActive }) => (
                     <Button
@@ -81,16 +85,28 @@ export function Sidenav({ brandImg, brandName, routes }) {
                       fullWidth
                     >
                       {icon}
-                      <Typography
-                        color="inherit"
-                        className="font-medium capitalize"
-                      >
+                      <Typography color="inherit" className="font-medium capitalize">
                         {name}
                       </Typography>
                     </Button>
                   )}
                 </NavLink>
-              </li>
+              ) : (
+                <Button
+                  variant="text"
+                  color="red" // Atau warna lain untuk membedakan tombol logout
+                  className="flex items-center gap-4 px-4 capitalize"
+                  fullWidth
+                  onClick={logout} // Panggil logout saat tombol diklik
+                >
+                  {icon} {/* Tambahkan ikon logout jika ada */}
+                  <Typography color="inherit" className="font-medium capitalize">
+                    {name}
+                  </Typography>
+                </Button>
+              )}
+            </li>
+            
             ))}
           </ul>
           )
