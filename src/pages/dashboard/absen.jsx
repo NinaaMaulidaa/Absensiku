@@ -38,7 +38,6 @@ export function Absen() {
 
   const [formData, setFormData] = React.useState({
     userId: '',
-    status: null,
     notes: '',
     fileUrl: ''
   })
@@ -80,16 +79,12 @@ export function Absen() {
         break;
     }
   }
-
-  console.log(status);
   
   const createAbsensi = (e) => {
     e.preventDefault()
     const dataToSubmit = new FormData()
-    console.log(e.target.fileUrl);
     setFormData({
       userId: user.id,
-      status: status ? "Absent" : 'Present',
       notes: e.target.notes?.value === undefined ? '' : e.target.notes.value,
       fileUrl: e.target?.fileUrl === undefined ? "" : e.target.fileUrl[0]
     })
@@ -101,6 +96,7 @@ export function Absen() {
     dataToSubmit.append('latitude', latitude)
     dataToSubmit.append('longitude', longitude)
     dataToSubmit.append('deviceId', localStorage.getItem('deviceId'))
+    dataToSubmit.append('status', status ? "Absent" : 'Present')
     const submitData = async () => {
       try {
         await axios.post(`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/attendance`, dataToSubmit, {
@@ -123,7 +119,7 @@ export function Absen() {
           title: "Gagal!",
           text: data.message,
           icon: "error",
-          // timer: 2000
+          timer: 2000
         });
       }
     }
@@ -168,13 +164,15 @@ export function Absen() {
             Swal.fire({
               title: "Berhasil!",
               text: "Presensi pulang berhasil dilakukan",
-              icon: "success"
+              icon: "success",
+              timer: 2000
             });
           } catch (error) {
             Swal.fire({
               title: "Gagal!",
               text: error,
-              icon: "error"
+              icon: "error",
+              timer: 2000
             });
           }
         }

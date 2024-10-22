@@ -73,7 +73,9 @@ export function DashboardNavbar() {
         <div className="flex items-center">
           {location.pathname !== '/dashboard/profile' && location.pathname !== '/dashboard/absen' ? <div className="mr-auto md:mr-4 md:w-56">
             <Input label="Search" name="search" onChange={(e) => findData(e)}/>
-          </div> : <div></div>}
+          </div> : <div className="mr-auto md:mr-4 md:w-56">
+            <input type="hidden" name="search" onChange={(e) => findData(e)}/>
+          </div>}
             <IconButton
               variant="text"
               color="blue-gray"

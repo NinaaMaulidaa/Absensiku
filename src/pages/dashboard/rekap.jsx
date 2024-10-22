@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Card,
   CardHeader,
@@ -9,8 +9,25 @@ import {
 } from "@material-tailwind/react";
 import {EyeIcon  } from "@heroicons/react/24/solid";
 import {RekapSiswa  } from "@/data";
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 export function RekapAbsen() {
+  const [rekap, setRekap] = useState([])
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = Cookies.get('token')
+      const {data} = await axios.get('https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/attendance', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      setRekap(data.data)
+    }
+    fetchData()
+  }, [])
+
+  console.log(rekap);
   return (
     <div className="mt-12 mb-8 flex flex-col gap-12">
       <Card>
@@ -39,7 +56,7 @@ export function RekapAbsen() {
               </tr>
             </thead>
             <tbody>
-              {RekapSiswa .map(
+              {RekapSiswa.map(
                 ({ no, tanggal, checkin, checkout, keterangan}, key) => {
                   const className = `py-3 px-5 ${
                     key === RekapSiswa .length - 1
