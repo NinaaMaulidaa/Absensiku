@@ -12,7 +12,8 @@ import { useContext } from "react";
 import { AuthContext } from "@/context/auth";
 
 export function Sidenav({ brandImg, brandName, routes }) {
-  const {logout} = useContext(AuthContext)
+  const {logout, user} = useContext(AuthContext)
+//  const sideMenu = user.number_id !== 'admin' ? "Magang" : "Admin"
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavColor, sidenavType, openSidenav } = controller;
   const sidenavTypes = {

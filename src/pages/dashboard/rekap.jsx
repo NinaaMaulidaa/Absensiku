@@ -101,7 +101,7 @@ export function RekapAbsen() {
                     </td>
                     <td className={className}>
                       <Typography variant="small" color="blue-gray" className="text-center">
-                        {el.checkInTime.split('T')[0]}
+                        {el.checkInTime ? el.checkInTime.split('T')[0].split('.')[0] : el.checkInTime}
                       </Typography>
                     </td>
                     <td className={className}>
@@ -111,7 +111,7 @@ export function RekapAbsen() {
                     </td>
                     <td className={className}>
                       <Typography variant="small" className="text-center text-blue-gray-600">
-                        {el.status === 'Absent' ? '-' : el.checkInTime.split('T')[1].split('.')[0]}
+                        {el.status === 'Absent' ? '-' : el.checkInTime ? el.checkInTime.split('T')[1].split('.')[0] : el.checkInTime}
                       </Typography>
                     </td>
                     <td className={className}>

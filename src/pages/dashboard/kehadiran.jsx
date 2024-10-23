@@ -28,7 +28,12 @@ export function Kehadiran() {
   const [open, setOpen] = useState(false);
   const [rekap, setRekap] = useState([]);
   const [detail, setDetail] = useState(null);
-  const [status, setStatus] = useState()
+  const [status, setStatus] = useState('')
+  const [formData, setFormData] = React.useState({
+    userId: '',
+    notes: '',
+    image: ''
+  })
 
   // Handle Dialog open/close
   const handleOpen = () => setOpen(!open);
@@ -61,17 +66,16 @@ export function Kehadiran() {
         },
       });
       setDetail(data.data);
+      setStatus(data.data.status)
+      setFormData({
+        ...formData,
+        userId: data.data.userId
+      })
       setOpen(true);
     } catch (error) {
       console.error("Error fetching attendance detail:", error);
     }
   };
-
-  const [formData, setFormData] = React.useState({
-    userId: '',
-    notes: '',
-    image: ''
-  })
 
   // The function that handles attendance update
 const updateAttendance = (e) => {
@@ -80,26 +84,17 @@ const updateAttendance = (e) => {
   // Prepare the data to be submitted
   const dataToSubmit = new FormData();
 
-  // Set formData for notes and fileUrl from the input fields
-  setFormData({
-    notes: e.target.notes?.value === undefined ? '' : e.target.notes.value,
-    image: e.target.fileUrl?.files ? e.target.fileUrl.files[0] : '',
-    userId: detail.userId
-  });
-
-  // Append formData keys to the FormData object
   for (const key in formData) {
     dataToSubmit.append(key, formData[key]);
   }
 
   // Add attendance status to FormData
-  const token = Cookies.get('token');
-  dataToSubmit.append('status', status === "Absent" ? "Absent" : 'Present');
-
+  console.log(formData);
   // Async function to submit the attendance update
   const submitData = async () => {
     try {
       // Send PUT request to update attendance
+      const token = Cookies.get('token');
       await axios.put(`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/attendance/${detail._id}`, dataToSubmit, {
         headers: {
           'Content-Type': 'multipart/form-data', // Necessary for file upload
@@ -107,8 +102,13 @@ const updateAttendance = (e) => {
         },
       });
       setOpen(!open);
-      
       // Show success alert
+      const { data } = await axios.get('https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/attendance', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setRekap(data.data);
       Swal.fire({
         title: "Berhasil!",
         text: "Melakukan update absensi!",
@@ -116,13 +116,14 @@ const updateAttendance = (e) => {
         timer: 2000,
       });
     } catch (error) {
-      const { response: { data } } = error;
+      console.log(error);
+      const { response } = error;
       setOpen(!open);
       
       // Show error alert
       Swal.fire({
         title: "Gagal!",
-        text: data.message,
+        text: response,
         icon: "error",
         timer: 2000,
       });
@@ -143,6 +144,10 @@ const updateAttendance = (e) => {
 
   const handleStatusChange = (e) => {
     setStatus(e)
+    setFormData({
+      ...formData,
+      status: e
+    })
   }
 
   const handleFileChange = (e) => {
@@ -274,7 +279,7 @@ const updateAttendance = (e) => {
                   Status
                 </Typography>
                 <div className="flex gap-10">
-              <Select name="status" value={detail.status} onChange={handleStatusChange}
+              <Select name="status" value={status} onChange={handleStatusChange}
               >
                 <Option value={'Present'}>Present</Option>
                 <Option value={'Absent'}>Absent</Option>
@@ -339,50 +344,49 @@ const updateAttendance = (e) => {
               </div>
               </div>
               
-              {detail.status === 'Absent' || status === 'Absent' && (
-                <>
-                  <div className="mt-4 w-full">
-                    <Typography variant="small" color="blue-gray" className="mb-2 text-left font-medium">
-                      Keterangan
-                    </Typography>
-                    <div className="w-full">
-                      <Textarea na value={detail.notes ? detail.notes : null} onChange={handleChange}/>
-                    </div>
-                  </div>
-                  {detail.fileUrl ? 
-                  
-                  <div className="mt-5 w-full">
-                    <Typography variant="small" color="blue-gray" className="mb-2 text-left font-medium">
-                      Bukti Keterangan
-                    </Typography>
-                    <a href={`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/files/${detail.fileUrl}`}>
-                      Download File
-                    </a>
-                  </div> : <div className="mt-5 w-full">
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="mb-2 text-left font-medium"
-              >
-                Upload Bukti Keterangan
-              </Typography>
-              <Input
-                color="gray"
-                variant="outlined"
-                size="lg"
-                onChange={handleFileChange}
-                name="fileUrl"
-                type="file"
-                className="placeholder:opacity-100 focus:!border-t-gray-900"
-                containerProps={{
-                  className: "!min-w-full",
-                }}
-              />
-            </div>
-                }
-                  
-                </>
-              )}
+              {status !== 'Present' ? 
+              <>
+              <div className="mt-4 w-full">
+                <Typography variant="small" color="blue-gray" className="mb-2 text-left font-medium">
+                  Keterangan
+                </Typography>
+                <div className="w-full">
+                  <Textarea name="notes" value={detail.notes ? detail.notes : null} onChange={handleChange}/>
+                </div>
+              </div>
+              {detail.fileUrl ? 
+                <div className="mt-5 w-full">
+                  <Typography variant="small" color="blue-gray" className="mb-2 text-left font-medium">
+                    Bukti Keterangan
+                  </Typography>
+                  <a href={`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/files/${detail.fileUrl}`}>
+                    Download File
+                  </a>
+                </div> : 
+                <div className="mt-5 w-full">
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="mb-2 text-left font-medium"
+                  >
+                    Upload Bukti Keterangan
+                  </Typography>
+                  <Input
+                    color="gray"
+                    variant="outlined"
+                    size="lg"
+                    onChange={handleFileChange}
+                    name="fileUrl"
+                    type="file"
+                    className="placeholder:opacity-100 focus:!border-t-gray-900"
+                    containerProps={{
+                      className: "!min-w-full",
+                    }}
+                  />
+                </div>
+              } 
+            </> : <div></div>
+              }
             </div>
           )}
         <DialogFooter>
