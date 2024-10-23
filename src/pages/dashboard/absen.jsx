@@ -95,7 +95,7 @@ export function Absen() {
     localStorage.getItem('deviceId') ?? localStorage.setItem('deviceId', token);
     dataToSubmit.append('latitude', latitude)
     dataToSubmit.append('longitude', longitude)
-    dataToSubmit.append('deviceId', localStorage.getItem('deviceId'))
+    dataToSubmit.append('deviceId', `${localStorage.getItem('deviceId')}+${new Date().getDate()}`)
     dataToSubmit.append('status', status ? "Absent" : 'Present')
     const submitData = async () => {
       try {
@@ -156,7 +156,7 @@ export function Absen() {
             try {
             const token = Cookies.get('token')
             console.log(token);
-            await axios.put(`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/attendance/${user.id}`, {
+            await axios.put(`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/attendance/checkout/${user.id}`, {
               headers: {
                 'Authorization': `Bearer ${token}`
               },

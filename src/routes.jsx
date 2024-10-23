@@ -72,12 +72,12 @@ export const routes = [
             path: "/kehadiran",
             element: <Kehadiran />,
           },
-          {
-            icon: <ClipboardDocumentListIcon {...icon} />,
-            name: "laporan",
-            path: "/laporan",
-            element: <Laporan />,
-          },
+          // {
+          //   icon: <ClipboardDocumentListIcon {...icon} />,
+          //   name: "laporan",
+          //   path: "/laporan",
+          //   element: <Laporan />,
+          // },
         ]
       } else {
         const pages = [
@@ -93,12 +93,12 @@ export const routes = [
             path: "/kehadiran",
             element: <Kehadiran />,
           },
-          {
-            icon: <ClipboardDocumentListIcon {...icon} />,
-            name: "laporan",
-            path: "/laporan",
-            element: <Laporan />,
-          },
+          // {
+          //   icon: <ClipboardDocumentListIcon {...icon} />,
+          //   name: "laporan",
+          //   path: "/laporan",
+          //   element: <Laporan />,
+          // },
         ]
         return pages
       }
