@@ -61,7 +61,9 @@ export function Absen() {
     setLongitude(longitude)
   }
 
-  getLocation()
+  if(!latitude || !longitude ) {
+    getLocation()
+  }
   
   function showError(error) {
     switch (error.code) {

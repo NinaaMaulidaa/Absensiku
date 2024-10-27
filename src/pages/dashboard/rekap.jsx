@@ -14,9 +14,10 @@ import {
   DialogFooter,
   Textarea,
 } from "@material-tailwind/react";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { IconButton } from "@material-tailwind/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { AuthContext } from "@/context/auth";
 
 export function RekapAbsen() {
   const [open, setOpen] = useState(false);
@@ -26,16 +27,23 @@ export function RekapAbsen() {
   // Handle Dialog open/close
   const handleOpen = () => setOpen(!open);
 
+  const token = Cookies.get('token')
+  const tokenParts = token.split('.');
+  const decodedPayload = JSON.parse(window.atob(tokenParts[1]));
+
+  console.log(decodedPayload);
+
   // Fetch attendance data on component mount
   useEffect(() => {
     const fetchData = async () => {
       try {
         const token = Cookies.get('token');
-        const { data } = await axios.get('https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/attendance', {
+        const { data } = await axios.get(`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/attendance/user/${decodedPayload.id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
+        console.log(data);
         setRekap(data.data);
       } catch (error) {
         console.error("Error fetching attendance data:", error);
@@ -101,7 +109,7 @@ export function RekapAbsen() {
                     </td>
                     <td className={className}>
                       <Typography variant="small" color="blue-gray" className="text-center">
-                        {el.checkInTime ? el.checkInTime.split('T')[0].split('.')[0] : el.checkInTime}
+                        {el.checkInTime ? new Date(el.checkInTime).toLocaleDateString() : el.checkInTime}
                       </Typography>
                     </td>
                     <td className={className}>
@@ -111,12 +119,12 @@ export function RekapAbsen() {
                     </td>
                     <td className={className}>
                       <Typography variant="small" className="text-center text-blue-gray-600">
-                        {el.status === 'Absent' ? '-' : el.checkInTime ? el.checkInTime.split('T')[1].split('.')[0] : el.checkInTime}
+                        {el.status === 'Absent' ? '-' : el.checkInTime ? new Date(el.checkInTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : el.checkInTime}
                       </Typography>
                     </td>
                     <td className={className}>
                       <Typography variant="small" className="text-center text-blue-gray-600">
-                        {el.status === 'Absent' ? '-' : el.checkOutTime ? el.checkOutTime.split('T')[1].split('.')[0] : el.checkOutTime}
+                        {el.status === 'Absent' ? '-' : el.checkOutTime ? new Date(el.checkOutTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : el.checkOutTime}
                       </Typography>
                     </td>
                     <td className={className}>
@@ -204,7 +212,7 @@ export function RekapAbsen() {
                     variant="outlined"
                     disabled
                     size="lg"
-                    value={detail.status === 'Absent' ? '-' : detail.checkInTime.split('T')[1].split('.')[0]}
+                    value={detail.status === 'Absent' ? '-' : new Date(detail.checkInTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     className="placeholder:opacity-100 focus:!border-t-gray-900"
                     containerProps={{
                       className: "!min-w-full",
@@ -222,7 +230,7 @@ export function RekapAbsen() {
                     variant="outlined"
                     disabled
                     size="lg"
-                    value={detail.status === 'Absent' ? '-' : detail.checkOutTime ? detail.checkOutTime.split('T')[1].split('.')[0] : detail.checkOutTime}
+                    value={detail.status === 'Absent' ? '-' : detail.checkOutTime ? new Date(detail.checkOutTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : detail.checkOutTime}
                     className="placeholder:opacity-100 focus:!border-t-gray-900"
                     containerProps={{
                       className: "!min-w-full",

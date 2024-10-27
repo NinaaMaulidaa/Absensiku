@@ -21,8 +21,9 @@ import React, {useState, useEffect} from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { IconButton } from "@material-tailwind/react";
-import { XMarkIcon } from "@heroicons/react/24/outline";
+import { XMarkIcon, DocumentIcon } from "@heroicons/react/24/outline";
 import Swal from "sweetalert2";
+import * as XLSX from 'xlsx';
 
 export function Kehadiran() {
   const [open, setOpen] = useState(false);
@@ -157,6 +158,58 @@ const updateAttendance = (e) => {
     })
   }
 
+  const exportTableToExcel = () => {
+    // Find the table element
+    const table = document.getElementById('my-table');
+    if (!table) return;
+  
+    // Create a blank worksheet data array
+    const worksheetData = [];
+  
+    // Loop through table rows
+    for (let i = 0; i < table.rows.length; i++) {
+      const row = table.rows[i];
+      const rowData = [];
+  
+      // Loop through cells in each row, excluding the last cell (Opsi column)
+      for (let j = 0; j < row.cells.length - 1; j++) {
+        rowData.push(row.cells[j].innerText);
+      }
+  
+      // Add the row data to worksheet data
+      worksheetData.push(rowData);
+    }
+  
+    // Convert the data array to a worksheet
+    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+  
+    // Create a new workbook and append the worksheet
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+  
+    // Write workbook to binary string
+    const workbookBinary = XLSX.write(workbook, { bookType: 'xlsx', type: 'binary' });
+  
+    // Convert the binary string to an ArrayBuffer
+    const buffer = new ArrayBuffer(workbookBinary.length);
+    const view = new Uint8Array(buffer);
+    for (let i = 0; i < workbookBinary.length; ++i) {
+      view[i] = workbookBinary.charCodeAt(i) & 0xFF;
+    }
+  
+    // Create a Blob from the ArrayBuffer with the correct MIME type
+    const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+  
+    // Create a download link
+    const downloadLink = document.createElement('a');
+    downloadLink.href = URL.createObjectURL(blob);
+    downloadLink.download = 'kehadiran.xlsx';
+  
+    // Trigger the download
+    downloadLink.click();
+  };
+  
+
   return (
     <div className="mt-12 mb-8 flex flex-col gap-12">
       <Card>
@@ -166,7 +219,7 @@ const updateAttendance = (e) => {
           </Typography>
         </CardHeader>
         <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
-          <table className="w-full min-w-[640px] table-auto">
+          <table className="w-full min-w-[640px] table-auto" id="my-table">
             <thead>
               <tr>
                 {["Nama", "Sekolah", "Jam Masuk", "Jam Keluar", "Status", "Opsi"].map((el) => (
@@ -194,7 +247,7 @@ const updateAttendance = (e) => {
                   }`;
 
                   return (
-                    <tr key={el.userId.name}>
+                    <tr key={el.userId?.name}>
                       <td className={className}>
                         <div className="flex items-center gap-4">
                           {/* <Avatar src={`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/files/${el.userId.image}`} alt={name} size="sm" variant="rounded" /> */}
@@ -204,27 +257,27 @@ const updateAttendance = (e) => {
                               color="blue-gray"
                               className="font-semibold"
                             >
-                              {el.userId.name}
+                              {el.userId?.name ?? ''}
                             </Typography>
-                            <Typography className="text-xs font-normal text-blue-gray-500">
-                              {el.userId.email}
-                            </Typography>
+                            {/* <Typography className="text-xs font-normal text-blue-gray-500">
+                              {el.userId?.email}
+                            </Typography> */}
                           </div>
                         </div>
                       </td>
                       <td className={className}>
                         <Typography className="text-xs font-semibold text-blue-gray-600">
-                          {el.userId.institution}
+                          {el.userId?.institution}
                         </Typography>
                       </td>
                       <td className={className}>
                         <Typography className="text-xs text-center font-semibold text-blue-gray-600">
-                          {el.status === 'Absent' ? '-' : el.checkInTime.split('T')[1].split('.')[0]}
+                          {el.status === 'Absent' ? '-' : el.checkInTime ? new Date(el.checkInTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '-'}
                         </Typography>
                       </td>
                       <td className={className}>
                         <Typography className="text-xs text-center font-semibold text-blue-gray-600">
-                          {el.status === 'Absent' ? '-' : el.checkOutTime ? el.checkOutTime.split('T')[1].split('.')[0] : el.checkOutTime}
+                          {el.status === 'Absent' ? '-' : el.checkOutTime ? new Date(el.checkOutTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '-'}
                         </Typography>
                       </td>
                       <td className={className}>
@@ -255,6 +308,17 @@ const updateAttendance = (e) => {
           </table>
         </CardBody>
       </Card>
+      <div className="p-4 xl:ml-80">
+        <IconButton
+          size="lg"
+          color="white"
+          className="fixed bottom-8 right-8 z-40 rounded-full shadow-blue-gray-900/10"
+          ripple={false}
+          onClick={exportTableToExcel}
+        >
+          <DocumentIcon className="h-5 w-5" />
+        </IconButton>
+      </div>
       <Dialog size="lg" open={open} handler={handleOpen} className="p-4">
         <DialogHeader className="relative m-0 block">
           <Typography variant="h4" color="blue-gray">
@@ -315,8 +379,7 @@ const updateAttendance = (e) => {
                     color="gray"
                     variant="outlined"
                     size="lg"
-                    type="time"
-                    value={detail.status === 'Absent' ? '-' : detail.checkInTime.split('T')[1].split('.')[0]}
+                    value={detail.status === 'Absent' ? '-' : detail.checkInTime ?  new Date(detail.checkInTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '-'}
                     className="placeholder:opacity-100 focus:!border-t-gray-900"
                     containerProps={{
                       className: "!min-w-full",
@@ -333,8 +396,7 @@ const updateAttendance = (e) => {
                     color="gray"
                     variant="outlined"
                     size="lg"
-                    type="time"
-                    value={detail.status === 'Absent' ? '-' : detail.checkOutTime ? detail.checkOutTime.split('T')[1].split('.')[0] : detail.checkOutTime}
+                    value={detail.status === 'Absent' ? '-' : detail.checkOutTime ?  new Date(detail.checkOutTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '-'}
                     className="placeholder:opacity-100 focus:!border-t-gray-900"
                     containerProps={{
                       className: "!min-w-full",

@@ -35,7 +35,11 @@ export function SignIn() {
           email: decodedPayload.email
         }, token: token})
         Cookies.set('token', token, { expires: 1, path: '/' });
-        navigate('/dashboard/profile')
+        if(decodedPayload.number_id !== "admin") {
+          navigate('/dashboard/profile')
+        } else {
+          navigate('/dashboard/anggota')
+        }
       } else {
         console.error('Invalid JWT token format');
       }

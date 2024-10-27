@@ -13,7 +13,7 @@ import { AuthContext } from "@/context/auth";
 
 export function Sidenav({ brandImg, brandName, routes }) {
   const {logout, user} = useContext(AuthContext)
- const sideMenu = user.number_id !== 'admin' ? "Magang" : "Admin"
+ const sideMenu = user?.number_id !== 'admin' ? "Magang" : "Admin"
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavColor, sidenavType, openSidenav } = controller;
   const sidenavTypes = {
@@ -54,7 +54,7 @@ export function Sidenav({ brandImg, brandName, routes }) {
       </div>
       <div className="m-4">
         {routes.map(({ layout, title, pages }, key) => {
-          const pageList = typeof pages == 'function' ? pages(sideMenu) : pages()
+          const pageList = typeof pages == 'function' ? pages(sideMenu ?? 'All') : pages()
           return (
             <ul key={key} className="mb-4 flex flex-col gap-1">
             {title && (
