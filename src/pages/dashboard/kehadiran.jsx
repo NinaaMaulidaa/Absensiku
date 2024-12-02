@@ -44,12 +44,13 @@ export function Kehadiran() {
     const fetchData = async () => {
       try {
         const token = Cookies.get('token');
-        const { data } = await axios.get('https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/attendance', {
+        const { data } = await axios.get('http://192.168.1.132:3001/api/v1/attendance', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        setRekap(data.data);
+        console.log(data.data[0]);
+        setRekap(data.data[0]);
       } catch (error) {
         console.error("Error fetching attendance data:", error);
       }
@@ -59,18 +60,20 @@ export function Kehadiran() {
 
   // Fetch attendance detail by ID and open the dialog
   const getAttendanceById = async (id) => {
+    console.log(id);
     try {
       const token = Cookies.get('token');
-      const { data } = await axios.get(`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/attendance/${id}`, {
+      const { data } = await axios.get(`http://192.168.1.132:3001/api/v1/attendance/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      setDetail(data.data);
-      setStatus(data.data.status)
+      console.log(data);
+      setDetail(data.data[0]);
+      setStatus(data.data[0].status)
       setFormData({
         ...formData,
-        userId: data.data.userId
+        userId: data.data[0].userId
       })
       setOpen(true);
     } catch (error) {
@@ -89,14 +92,12 @@ const updateAttendance = (e) => {
     dataToSubmit.append(key, formData[key]);
   }
 
-  // Add attendance status to FormData
-  console.log(formData);
   // Async function to submit the attendance update
   const submitData = async () => {
     try {
       // Send PUT request to update attendance
       const token = Cookies.get('token');
-      await axios.put(`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/attendance/${detail._id}`, dataToSubmit, {
+      await axios.put(`http://192.168.1.132:3001/api/v1/attendance/${detail.id}`, dataToSubmit, {
         headers: {
           'Content-Type': 'multipart/form-data', // Necessary for file upload
           'Authorization': `Bearer ${token}`,
@@ -104,12 +105,12 @@ const updateAttendance = (e) => {
       });
       setOpen(!open);
       // Show success alert
-      const { data } = await axios.get('https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/attendance', {
+      const { data } = await axios.get('http://192.168.1.132:3001/api/v1/attendance', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      setRekap(data.data);
+      setRekap(data.data[0]);
       Swal.fire({
         title: "Berhasil!",
         text: "Melakukan update absensi!",
@@ -247,27 +248,27 @@ const updateAttendance = (e) => {
                   }`;
 
                   return (
-                    <tr key={el.userId?.name}>
+                    <tr key={el.name}>
                       <td className={className}>
                         <div className="flex items-center gap-4">
-                          {/* <Avatar src={`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/files/${el.userId.image}`} alt={name} size="sm" variant="rounded" /> */}
+                          {/* <Avatar src={`http://192.168.1.132:3001/api/v1/files/${el.userId.image}`} alt={name} size="sm" variant="rounded" /> */}
                           <div>
                             <Typography
                               variant="small"
                               color="blue-gray"
                               className="font-semibold"
                             >
-                              {el.userId?.name ?? ''}
+                              {el.name ?? ''}
                             </Typography>
                             {/* <Typography className="text-xs font-normal text-blue-gray-500">
-                              {el.userId?.email}
+                              {el.email}
                             </Typography> */}
                           </div>
                         </div>
                       </td>
                       <td className={className}>
                         <Typography className="text-xs font-semibold text-blue-gray-600">
-                          {el.userId?.institution}
+                          {el.institution}
                         </Typography>
                       </td>
                       <td className={className}>
@@ -293,7 +294,7 @@ const updateAttendance = (e) => {
                         <div className="flex justify-center items-center">
                         <Typography
                           as="a"
-                          onClick={() => getAttendanceById(el._id)}
+                          onClick={() => getAttendanceById(el.attendanceId)}
                           className="text-xs cursor-pointer font-semibold text-blue-gray-600"
                         >
                          <PencilSquareIcon className="w-5 h-5" />
@@ -421,7 +422,7 @@ const updateAttendance = (e) => {
                   <Typography variant="small" color="blue-gray" className="mb-2 text-left font-medium">
                     Bukti Keterangan
                   </Typography>
-                  <a href={`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/files/${detail.fileUrl}`}>
+                  <a href={`http://192.168.1.132:3001/api/v1/files/${detail.fileUrl}`} target="_blank">
                     Download File
                   </a>
                 </div> : 

@@ -71,7 +71,7 @@ export function DashboardNavbar() {
           </Typography>
         </div>
         <div className="flex items-center">
-          {location.pathname !== '/dashboard/profile' && location.pathname !== '/dashboard/absen' ? <div className="mr-auto md:mr-4 md:w-56">
+          {location.pathname !== '/dashboard/profile' && location.pathname !== '/dashboard/absen' && location.pathname !== '/dashboard/rekap' && location.pathname !== '/dashboard/kehadiran' ? <div className="mr-auto md:mr-4 md:w-56">
             <Input label="Search" name="search" onChange={(e) => findData(e)}/>
           </div> : <div className="mr-auto md:mr-4 md:w-56">
             <input type="hidden" name="search" onChange={(e) => findData(e)}/>

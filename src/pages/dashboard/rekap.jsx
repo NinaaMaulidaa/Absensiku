@@ -22,7 +22,7 @@ import { AuthContext } from "@/context/auth";
 export function RekapAbsen() {
   const [open, setOpen] = useState(false);
   const [rekap, setRekap] = useState([]);
-  const [detail, setDetail] = useState(null);
+  const [detail, setDetail] = useState();
 
   // Handle Dialog open/close
   const handleOpen = () => setOpen(!open);
@@ -31,14 +31,12 @@ export function RekapAbsen() {
   const tokenParts = token.split('.');
   const decodedPayload = JSON.parse(window.atob(tokenParts[1]));
 
-  console.log(decodedPayload);
-
   // Fetch attendance data on component mount
   useEffect(() => {
     const fetchData = async () => {
       try {
         const token = Cookies.get('token');
-        const { data } = await axios.get(`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/attendance/user/${decodedPayload.id}`, {
+        const { data } = await axios.get(`http://192.168.1.132:3001/api/v1/attendance/user/${decodedPayload.id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -56,12 +54,12 @@ export function RekapAbsen() {
   const getAttendanceById = async (id) => {
     try {
       const token = Cookies.get('token');
-      const { data } = await axios.get(`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/attendance/${id}`, {
+      const { data } = await axios.get(`http://192.168.1.132:3001/api/v1/attendance/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      setDetail(data.data);
+      setDetail(data.data[0]);
       setOpen(true);
     } catch (error) {
       console.error("Error fetching attendance detail:", error);
@@ -131,7 +129,7 @@ export function RekapAbsen() {
                       <div className="flex gap-3 justify-center items-center">
                         <Typography
                           as="a"
-                          onClick={() => getAttendanceById(el._id)}
+                          onClick={() => getAttendanceById(el.id)}
                           className="text-xs cursor-pointer font-semibold text-blue-gray-600"
                         >
                           <EyeIcon className="w-5 h-5" />
@@ -254,7 +252,7 @@ export function RekapAbsen() {
                     <Typography variant="small" color="blue-gray" className="mb-2 text-left font-medium">
                       Bukti Keterangan
                     </Typography>
-                    <a href={`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/files/${detail.fileUrl}`}>
+                    <a href={`http://192.168.1.132:3001/api/v1/files/${detail.fileUrl}`}>
                       Download File
                     </a>
                   </div>

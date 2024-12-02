@@ -34,17 +34,17 @@ export function Anggota() {
   var [name, setName] = useSearch()
   const [status, setStatus] = React.useState(true)
   const [formData, setFormData] = React.useState({
-    number_id: '',
-    name: '',
-    email: '',
-    password: '',
-    institution: '',
-    address: '',
+    number_id: null,
+    name: null,
+    email: null,
+    password: null,
+    institution: null,
+    address: null,
     image: null,
     isActive: status,
-    contactNumber: '',
-    description: '',
-    internship_period: ''
+    contactNumber: null,
+    description: null,
+    internship_period: null
   })
 
   const [active, setActive] = React.useState(1);
@@ -64,12 +64,11 @@ export function Anggota() {
     fetchList();
   }, [])
 
-
   useEffect( () => {
     const fetchList = async () => {
       try {
         if(name) {
-          const { data } = await axios.get(`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/user?name=${name}`)
+          const { data } = await axios.get(`http://192.168.1.132:3001/api/v1/user?name=${name}`)
           setListUser(data.data);
         } else {
 
@@ -130,7 +129,7 @@ export function Anggota() {
       confirmButtonText: "Ya, hapus!"
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/user/${id}`, {
+        fetch(`http://192.168.1.132:3001/api/v1/user/${id}`, {
           method: 'DELETE',
           headers: {
             "Content-Type": "application/json",
@@ -178,7 +177,7 @@ export function Anggota() {
     description: user.description,
     internship_period: user.internship_period
     })
-    setIdUser(user._id)
+    setIdUser(user.id)
     setOpen(!open)
   }
 
@@ -199,7 +198,7 @@ export function Anggota() {
       dataToSubmit.append(key, formData[key]);
     }
     
-      const response = await axios.put(`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/user/${idUser}`, dataToSubmit, {
+      await axios.put(`http://192.168.1.132:3001/api/v1/user/${idUser}`, dataToSubmit, {
         headers: {
           'Content-Type': 'multipart/form-data', // Header untuk file upload
         },
@@ -240,6 +239,8 @@ export function Anggota() {
     })
   }
 
+  console.log(listUser);
+
   return (
     <>
       <div className="mt-12 mb-8 flex flex-col gap-12">
@@ -260,7 +261,7 @@ export function Anggota() {
                   >
                     <Typography
                       variant="small"
-                      className={`text-[13px] font-bold ${el == "Periode" || el == "Email" || el == "Sekolah" || el == "Opsi" ? `text-center` : ''} uppercase text-blue-gray-400`}
+                      className={`text-[13px] font-bold ${el == "Periode" || el == "Sekolah" || el == "Opsi" ? `text-center` : ''} uppercase text-blue-gray-400`}
                     >
                       {el}
                     </Typography>
@@ -269,7 +270,7 @@ export function Anggota() {
               </tr>
             </thead>
             <tbody>
-              {listUser.map(
+              {listUser ? listUser.map(
                 (user, key) => {
                   const className = `py-3 px-5 ${
                     key === listUser.length - 1
@@ -281,7 +282,7 @@ export function Anggota() {
                     <tr key={key}>
                       <td className={className}>
                         <div className="flex items-center gap-4">
-                          <Avatar src={`https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/files/${user.image}`} alt={user.image} size="sm" className="rounded-lg"/>
+                          <Avatar src={`${user.image[0] == 'h' ? user.image : `https://88gzhtq3-3001.asse.devtunnels.ms/api/v1/files/${user.image}`}`} alt={user.image} size="sm" className="rounded-lg"/>
                           <div>
                             <Typography
                               variant="small"
@@ -294,7 +295,7 @@ export function Anggota() {
                         </div>
                       </td>
                       <td className={className}>
-                        <Typography className="text-xs font-semibold text-blue-gray-600 text-center">
+                        <Typography className="text-xs font-semibold text-blue-gray-600 text-start">
                           {user.email}
                         </Typography>
                       </td>
@@ -319,7 +320,7 @@ export function Anggota() {
                         </Typography>
                         <Typography
                           as="a"
-                          onClick={() => deleteData(user._id)}
+                          onClick={() => deleteData(user.id)}
                           className="text-xs font-semibold text-blue-gray-600 cursor-pointer"
                         >
                         <TrashIcon className="w-5 h-5" />
@@ -329,7 +330,7 @@ export function Anggota() {
                     </tr>
                   );
                 }
-              )}
+              ) : []}
             </tbody>
           </table>
         </CardBody>

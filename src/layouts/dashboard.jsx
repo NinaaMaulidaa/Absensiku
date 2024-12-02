@@ -54,7 +54,7 @@ export function Dashboard() {
       number_id: username.value,
       password: password.value
     }
-    const response = await axios.post('https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/user', user)
+    const response = await axios.post(`http://192.168.1.132:3001/api/v1/user`, user)
       handleOpen()
       Swal.fire({
         title: "Berhasil!",
