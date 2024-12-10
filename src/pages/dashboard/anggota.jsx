@@ -32,7 +32,7 @@ export function Anggota() {
   const [listUser, setListUser] = React.useState([])
   const [idUser, setIdUser] = React.useState("")
   var [name, setName] = useSearch()
-  const [status, setStatus] = React.useState(true)
+  const [status, setStatus] = React.useState()
   const [formData, setFormData] = React.useState({
     number_id: null,
     name: null,
@@ -41,7 +41,7 @@ export function Anggota() {
     institution: null,
     address: null,
     image: null,
-    isActive: status,
+    isActive: null,
     contactNumber: null,
     description: null,
     internship_period: null
@@ -68,7 +68,7 @@ export function Anggota() {
     const fetchList = async () => {
       try {
         if(name) {
-          const { data } = await axios.get(`http://192.168.1.132:3001/api/v1/user?name=${name}`)
+          const { data } = await axios.get(`http://localhost:8000/api/v1/user?name=${name}`)
           setListUser(data.data);
         } else {
 
@@ -129,7 +129,7 @@ export function Anggota() {
       confirmButtonText: "Ya, hapus!"
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://192.168.1.132:3001/api/v1/user/${id}`, {
+        fetch(`http://localhost:8000/api/v1/user/${id}`, {
           method: 'DELETE',
           headers: {
             "Content-Type": "application/json",
@@ -198,7 +198,7 @@ export function Anggota() {
       dataToSubmit.append(key, formData[key]);
     }
     
-      await axios.put(`http://192.168.1.132:3001/api/v1/user/${idUser}`, dataToSubmit, {
+      await axios.put(`http://localhost:8000/api/v1/user/${idUser}`, dataToSubmit, {
         headers: {
           'Content-Type': 'multipart/form-data', // Header untuk file upload
         },
@@ -219,6 +219,7 @@ export function Anggota() {
         title: "Gagal!",
         text: error,
         icon: "error",
+        timer: 2000
       });
     }
   }
@@ -235,7 +236,7 @@ export function Anggota() {
     setStatus(value)
     setFormData({
       ...formData,
-      status: value
+      isActive: value
     })
   }
 
@@ -282,7 +283,7 @@ export function Anggota() {
                     <tr key={key}>
                       <td className={className}>
                         <div className="flex items-center gap-4">
-                          <Avatar src={`${user.image[0] == 'h' ? user.image : `https://88gzhtq3-3001.asse.devtunnels.ms/api/v1/files/${user.image}`}`} alt={user.image} size="sm" className="rounded-lg"/>
+                          <Avatar src={`${user.image[0] == 'h' ? user.image : `https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/files/${user.image}`}`} alt={user.image} size="sm" className="rounded-lg"/>
                           <div>
                             <Typography
                               variant="small"
@@ -482,7 +483,7 @@ export function Anggota() {
           </div>
           <div className="flex gap-4 mb-4">
             <div className="w-full">
-              <Select label="Select Status" name="status" value={status} onChange={(value) => handleStatusChange(value)}>
+              <Select label="Select Status" name="isActive" value={formData.isActive == 1 ? true : false} onChange={(value) => handleStatusChange(value)}>
                 <Option value={true}>Active</Option>
                 <Option value={false}>Non Active</Option>
               </Select>

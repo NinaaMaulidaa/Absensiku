@@ -21,7 +21,7 @@ export function SignIn() {
         password: e.target.password.value,
       };
     
-      const response = await axios.post('http://192.168.1.132:3001/api/v1/auth/login', userData);
+      const response = await axios.post('http://localhost:8000/api/v1/auth/login', userData);
       console.log(response);
     
       const token = response.data.data.access_token;

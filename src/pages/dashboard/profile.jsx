@@ -30,6 +30,8 @@ import { useUserLogin } from "@/context/user";
 import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "@/context/auth";
+import Swal from "sweetalert2";
+import fetchData from "@/data/user/fetchListUser";
   
   export function Profile() {
     const [open, setOpen] = React.useState(false);
@@ -39,26 +41,107 @@ import { AuthContext } from "@/context/auth";
     if(!user) {
       return navigate('/auth/sign-in')
     }
-    const [data, setData] = useState({
-      name: '',
-      number_id: '',
-      description: '',
-      email: '',
-      contactNumber: '',
-      institution: '',
-      internship_period: '',
-      image: '',
-      address: ''
+    const [formData, setFormData] = React.useState({
+      number_id: null,
+      name: null,
+      email: null,
+      password: null,
+      institution: null,
+      address: null,
+      image: null,
+      isActive: null,
+      contactNumber: null,
+      description: null,
+      internship_period: null
     })
 
     useEffect(() => {
       const fetchData = async () => {
-        const response = await axios.get(`http://192.168.1.132:3001/api/v1/user/${user.id}`)
-        setData(response.data.data[0])
+        const response = await axios.get(`http://localhost:8000/api/v1/user/${user.id}`)
+        setFormData(response.data.data[0])
       }
       fetchData()
     }, [])
-    
+
+    const handleFileChange = (e) => {
+      setFormData({
+        ...formData,
+        image: e.target.files[0]
+      })
+    }
+  
+    const editData = async (user) => {
+      setFormData({
+        number_id: user.number_id,
+      name: user.name,
+      email: user.email,
+      password: user.password,
+      institution: user.institution,
+      address: user.address,
+      image: user.image,
+      isActive: user.isActive == 1 ? true : false,
+      contactNumber: user.contactNumber,
+      description: user.description,
+      internship_period: user.internship_period
+      })
+      setOpen(!open)
+    }
+  
+    const submitData = async (e) => {
+      e.preventDefault()
+      if(!formData.image || !formData.name ) {
+        Swal.fire({
+          title: "Gagal!",
+          text: "Pastikan semua data telah diisi dengan benar!",
+          icon: "error",
+          timer: 2000
+        });
+        return;
+      }
+      try {
+        const dataToSubmit = new FormData();
+      for (const key in formData) {
+        dataToSubmit.append(key, formData[key]);
+      }
+      
+        await axios.put(`http://localhost:8000/api/v1/user/${user.id}`, dataToSubmit, {
+          headers: {
+            'Content-Type': 'multipart/form-data', // Header untuk file upload
+          },
+        })
+        setOpen(!open)
+        const fetchData = async () => {
+          const response = await axios.get(`http://localhost:8000/api/v1/user/${user.id}`)
+          setFormData(response.data.data[0])
+        }
+        fetchData()
+        Swal.fire({
+          title: "Diupdate!",
+          text: "Data berhasil di update!.",
+          icon: "success",
+          timer: 2000
+        });
+      } catch (error) {
+        console.log(error);
+        setOpen(!open)
+        Swal.fire({
+          title: "Gagal!",
+          text: error,
+          icon: "error",
+          timer: 2000
+        });
+      }
+    }
+
+    console.log(formData);
+  
+    const handleChange = (e) => {
+      const {name, value} = e.target
+      setFormData({
+        ...formData,
+        [name]: value
+      })
+    }
 
     return (
       <>
@@ -70,7 +153,7 @@ import { AuthContext } from "@/context/auth";
             <div className="mb-10 flex items-center justify-between flex-wrap gap-6">
               <div className="flex items-center gap-6">
                 <Avatar
-                  src={`${data.image ? data.image[0] == 'h' ? data.image : `https://88gzhtq3-3001.asse.devtunnels.ms/api/v1/files/${data.image}` : null}`}
+                  src={`${formData.image ? formData.image[0] == 'h' ? formData.image : `https://88gzhtq3-8000.asse.devtunnels.ms/api/v1/files/${formData.image}` : null}`}
                   alt="bruce-mars"
                   size="xl"
                   variant="rounded"
@@ -78,7 +161,7 @@ import { AuthContext } from "@/context/auth";
                 />
                 <div>
                   <Typography variant="h5" color="blue-gray" className="mb-1">
-                    {data.name}
+                    {formData.name}
                   </Typography>
                   <Typography
                     variant="small"
@@ -93,16 +176,16 @@ import { AuthContext } from "@/context/auth";
             <div className="mb-12 px-4">
               <ProfileInfoCard
                 title="Profile Information"
-                description={data.description ? data.description : `Nama saya ${data.name}. Saya adalah seorang Mahasiswa/Siswa di ${data.institution}, dan saat ini tinggal di ${data.address}dengan nomor telepon yang dapat dihubungi ${data.contactNumber}, serta alamat email aktif ${data.email}.`}
+                description={formData.description ? formData.description : `Nama saya ${formData.name}. Saya adalah seorang Mahasiswa/Siswa di ${formData.institution}, dan saat ini tinggal di ${formData.address}dengan nomor telepon yang dapat dihubungi ${formData.contactNumber}, serta alamat email aktif ${formData.email}.`}
                 details={{
-                  "username": data.number_id,
-                  telepon: data.contactNumber,
-                  email: data.email,
-                  "sekolah / kampus": data.institution,
+                  "username": formData.number_id,
+                  telepon: formData.contactNumber,
+                  email: formData.email,
+                  "sekolah / kampus": formData.institution,
                 }}
                 action={
                   <Tooltip content="Edit Profile">
-                    <PencilIcon className="h-4 w-4 cursor-pointer text-blue-gray-500" onClick={handleOpen}/>
+                    <PencilIcon className="h-4 w-4 cursor-pointer text-blue-gray-500" onClick={() => editData(formData)}/>
                   </Tooltip>
                 }
               />
@@ -128,15 +211,15 @@ import { AuthContext } from "@/context/auth";
         </DialogHeader>
         <DialogBody className="space-y-4 pb-6">
           
-          <form>
+          <form onSubmit={submitData}>
           <div className="flex gap-4 mb-4">
             <div className="w-full">
               <Input
                 color="gray"
                 size="sm"
                 name="name"
-                value={data.name}
-                // onChange={handleChange}
+                value={formData.name}
+                onChange={handleChange}
                 className="placeholder:opacity-100"
                 label="Nama"
               />
@@ -147,9 +230,33 @@ import { AuthContext } from "@/context/auth";
                 size="sm"
                 name="email"
                 label="Email"
-                value={data.email}
-                // onChange={handleChange}
+                value={formData.email}
+                onChange={handleChange}
                 className="placeholder:opacity-100"
+              />
+            </div>
+          </div>
+          <div className="flex gap-4 mb-4">
+          <div className="w-full">
+              <Input
+                color="gray"
+                size="sm"
+                label="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className="placeholder:opacity-100"
+              />
+            </div>
+            <div className="w-full">
+              <Input
+                color="gray"
+                size="sm"
+                name="contactNumber"
+                value={formData.contactNumber}
+                onChange={handleChange}
+                className="placeholder:opacity-100"
+                label="No. Telepon"
               />
             </div>
             <div className="w-full">
@@ -158,19 +265,8 @@ import { AuthContext } from "@/context/auth";
                 size="sm"
                 label="number_id"
                 name="number_id"
-                value={data.number_id}
-                // onChange={handleChange}
-                className="placeholder:opacity-100"
-              />
-            </div>
-            <div className="w-full">
-              <Input
-                color="gray"
-                size="sm"
-                label="password"
-                name="password"
-                value={data.password}
-                // onChange={handleChange}
+                value={formData.number_id}
+                onChange={handleChange}
                 className="placeholder:opacity-100"
               />
             </div>
@@ -181,8 +277,8 @@ import { AuthContext } from "@/context/auth";
                 color="gray"
                 size="sm"
                 name="institution"
-                value={data.institution}
-                // onChange={handleChange}
+                value={formData.institution}
+                onChange={handleChange}
                 className="placeholder:opacity-100"
                 label="Asal Sekolah"
               />
@@ -192,8 +288,8 @@ import { AuthContext } from "@/context/auth";
                 color="gray"
                 size="sm"
                 name="internship_period"
-  value={data.internship_period}
-                // onChange={handleChange}
+  value={formData.internship_period}
+                onChange={handleChange}
                 className="placeholder:opacity-100"
                 label="Periode"
               />
@@ -203,27 +299,17 @@ import { AuthContext } from "@/context/auth";
                 color="gray"
                 size="sm"
                 name="address"
-                value={data.address}
-                // onChange={handleChange}
+                value={formData.address}
+                onChange={handleChange}
                 className="placeholder:opacity-100"
                 label="Alamat"
               />
             </div>
-            <div className="w-full">
-              <Input
-                color="gray"
-                size="sm"
-                name="contactNumber"
-                value={data.contactNumber}
-                // onChange={handleChange}
-                className="placeholder:opacity-100"
-                label="No. Telepon"
-              />
-            </div>
+            
           </div>
           <div className="flex gap-4 mb-4">
             <div className="w-full">
-            {/* <Textarea label="Deskripsi" onChange={handleChange} value={data.description} name="description"/> */}
+            <Textarea label="Deskripsi" onChange={handleChange} value={formData.description} name="description"/>
             </div>
           </div>
           <div className="flex gap-4 mb-4">
@@ -232,8 +318,7 @@ import { AuthContext } from "@/context/auth";
                 color="gray"
                 size="sm"
                 name="image"
-                // value={data.image}
-                // onChange={handleFileChange}
+                onChange={handleFileChange}
                 type="file"
                 className="placeholder:opacity-100"
                 label="Foto"

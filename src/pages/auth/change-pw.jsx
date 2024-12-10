@@ -16,7 +16,7 @@ export function ChangePw() {
       password: e.target.password.value,
     }
     try {
-      await axios.put(`http://192.168.1.132:3001/api/v1/auth/change-password`, change, {})
+      await axios.put(`http://localhost:8000/api/v1/auth/change-password`, change, {})
       Swal.fire({
         title: "Berhasil!",
         text: "Ganti Password berhasil di lakukan!.",

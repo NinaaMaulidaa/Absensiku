@@ -36,7 +36,7 @@ export function RekapAbsen() {
     const fetchData = async () => {
       try {
         const token = Cookies.get('token');
-        const { data } = await axios.get(`http://192.168.1.132:3001/api/v1/attendance/user/${decodedPayload.id}`, {
+        const { data } = await axios.get(`http://localhost:8000/api/v1/attendance/user/${decodedPayload.id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -54,7 +54,7 @@ export function RekapAbsen() {
   const getAttendanceById = async (id) => {
     try {
       const token = Cookies.get('token');
-      const { data } = await axios.get(`http://192.168.1.132:3001/api/v1/attendance/${id}`, {
+      const { data } = await axios.get(`http://localhost:8000/api/v1/attendance/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -252,7 +252,7 @@ export function RekapAbsen() {
                     <Typography variant="small" color="blue-gray" className="mb-2 text-left font-medium">
                       Bukti Keterangan
                     </Typography>
-                    <a href={`http://192.168.1.132:3001/api/v1/files/${detail.fileUrl}`}>
+                    <a href={`http://localhost:8000/api/v1/files/${detail.fileUrl}`}>
                       Download File
                     </a>
                   </div>

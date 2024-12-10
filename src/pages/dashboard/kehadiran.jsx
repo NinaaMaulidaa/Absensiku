@@ -44,7 +44,7 @@ export function Kehadiran() {
     const fetchData = async () => {
       try {
         const token = Cookies.get('token');
-        const { data } = await axios.get('http://192.168.1.132:3001/api/v1/attendance', {
+        const { data } = await axios.get('http://localhost:8000/api/v1/attendance', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -63,7 +63,7 @@ export function Kehadiran() {
     console.log(id);
     try {
       const token = Cookies.get('token');
-      const { data } = await axios.get(`http://192.168.1.132:3001/api/v1/attendance/${id}`, {
+      const { data } = await axios.get(`http://localhost:8000/api/v1/attendance/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -97,7 +97,7 @@ const updateAttendance = (e) => {
     try {
       // Send PUT request to update attendance
       const token = Cookies.get('token');
-      await axios.put(`http://192.168.1.132:3001/api/v1/attendance/${detail.id}`, dataToSubmit, {
+      await axios.put(`http://localhost:8000/api/v1/attendance/${detail.id}`, dataToSubmit, {
         headers: {
           'Content-Type': 'multipart/form-data', // Necessary for file upload
           'Authorization': `Bearer ${token}`,
@@ -105,7 +105,7 @@ const updateAttendance = (e) => {
       });
       setOpen(!open);
       // Show success alert
-      const { data } = await axios.get('http://192.168.1.132:3001/api/v1/attendance', {
+      const { data } = await axios.get('http://localhost:8000/api/v1/attendance', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -251,7 +251,7 @@ const updateAttendance = (e) => {
                     <tr key={el.name}>
                       <td className={className}>
                         <div className="flex items-center gap-4">
-                          {/* <Avatar src={`http://192.168.1.132:3001/api/v1/files/${el.userId.image}`} alt={name} size="sm" variant="rounded" /> */}
+                          {/* <Avatar src={`http://localhost:8000/api/v1/files/${el.userId.image}`} alt={name} size="sm" variant="rounded" /> */}
                           <div>
                             <Typography
                               variant="small"
@@ -422,7 +422,7 @@ const updateAttendance = (e) => {
                   <Typography variant="small" color="blue-gray" className="mb-2 text-left font-medium">
                     Bukti Keterangan
                   </Typography>
-                  <a href={`http://192.168.1.132:3001/api/v1/files/${detail.fileUrl}`} target="_blank">
+                  <a href={`http://localhost:8000/api/v1/files/${detail.fileUrl}`} target="_blank">
                     Download File
                   </a>
                 </div> : 

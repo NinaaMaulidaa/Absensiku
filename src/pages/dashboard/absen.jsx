@@ -101,7 +101,7 @@ export function Absen() {
     dataToSubmit.append('status', status ? "Absent" : 'Present')
     const submitData = async () => {
       try {
-        await axios.post(`http://192.168.1.132:3001/api/v1/attendance`, dataToSubmit, {
+        await axios.post(`http://localhost:8000/api/v1/attendance`, dataToSubmit, {
           headers: {
             'Content-Type': 'multipart/form-data', // Header untuk file upload
             'Authorization': `Bearer ${token}`
@@ -158,7 +158,7 @@ export function Absen() {
             try {
             const token = Cookies.get('token')
             console.log(token);
-            await axios.put(`http://192.168.1.132:3001/api/v1/attendance/checkout/${user.id}`, {
+            await axios.put(`http://localhost:8000/api/v1/attendance/checkout/${user.id}`, {
               headers: {
                 'Authorization': `Bearer ${token}`
               },
